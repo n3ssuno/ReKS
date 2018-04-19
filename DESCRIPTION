@@ -1,0 +1,19 @@
+Package: RKS
+Type: Package
+Title: Regional Knowledge Space
+Version: 0.1.0
+Author: Carlo Bottai
+Maintainer: Carlo Bottai <carlo.bottai@unito.it>
+Description: By the moment RKS ("rocks") provides four nice functions.
+    The first computes the entropy of a given array and implement an 
+    algoritm able to decompose it into between and within group entropy 
+    (aka unrelated and related variety). The second calculates the 
+    Coherence Index. The third and the fourth yield the ECI and the 
+    Fitness/Complexity, respectively. In the future how knows?!
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports:
+    reshape2,
+    plyr
