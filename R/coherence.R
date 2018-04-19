@@ -36,10 +36,10 @@
 #' @return A data.frame with the Coherence Index of each geographical area
 #' in each time step of analysis.
 #' @examples
-#' RCI <- Coherence(data = regpat, time_dim = year, geo_dim = NUTS2,
+#' RCI <- coherence(data = regpat, time_dim = year, geo_dim = NUTS2,
 #' kng_dim = IPC.3dig, kng_nbr = N.patents)
 
-Coherence <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
+coherence <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
     if (!requireNamespace("reshape2", quietly = TRUE)) {
         stop(paste0("Package \"reshape2\" needed for this function to work. ",
             "Please install it."), call. = FALSE)
