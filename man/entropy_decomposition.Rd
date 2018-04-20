@@ -26,6 +26,27 @@ The total (undecomposed) entropy is equal to the sum of the two
 decomposed components. The within-groups component is equal to the weighted
 average of the entropy of each of the groups. So the between-groups component
 is equal to the residual entropy.
+See:
+\itemize{
+\item{Theil (1972) \emph{Statistical Decomposition Analysis}, North-Holland;}
+\item{Zadjenweber (1972) "Une Application de la Th{\'e}orie de l’Information
+{\`a} l'{\'E}conomie: La Mesure de la Concentration, \emph{Revue d'Economie
+Politique}, 82, 486–-510;}
+\item{Attaran (1985) "Industrial Diversity and Economic Performance in U.S.
+Areas, \emph{The Annals of Regional Science}, 20, 44--54;}
+\item{Frenken (2007) "Entropy statistics and information theory", in
+Hanusch and Pyka (Eds.) \emph{Elgar Companion to Neo-Schumpeterian
+Economics}, Edward Elgar.}
+\item{Frenken, van Oort and Verburg (2007) "Related Variety, Unrelated
+Variety and Regional Economic Growth", \emph{Regional Studies}, 41,
+685--697;}
+\item{Quatraro (2010) 'Knowledge Coherence, Variety and Economic Growth:
+Manufacturing Evidence from Italian Regions', \emph{Research Policy}, 39,
+1289--1302;}
+\item{Rocchetta and Mina (2017), "Technological Coherence and the Adaptive
+Resilience of Regional Economies", \emph{Papers in Evolutionary Economic
+Geography}, Utrecht University.}
+}
 }
 \examples{
 etpy_decomp <- entropy_decomposition(data, grps)

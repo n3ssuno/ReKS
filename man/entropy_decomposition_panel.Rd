@@ -7,12 +7,11 @@
 entropy_decomposition_panel(data, kng_nbr, kng_dim_upper, geo_dim, time_dim)
 }
 \arguments{
-\item{data}{It is expected to be a data.frame, data.table or an array of
-numbers. This is the only mandatory input, all others being optional.}
+\item{data}{It is expected to be a dataframe in "long" format.}
 
-\item{kng_nbr}{It is expected to be the name of the (numeric) column of the DB
-in which there is either the absolute number of patents (firms) of a given
-class (industry), or the corresponding relative frequences.}
+\item{kng_nbr}{It is expected to be the name of the (numeric) column of the
+DB in which there is either the absolute number of patents (firms) of a
+given class (industry), or the corresponding relative frequences.}
 
 \item{kng_dim_upper}{It is expected to be an integer that denotes the number
 of digits considered as the level of aggregation to compute the entropy
@@ -35,15 +34,39 @@ values. Otherwise, a data.table with the overall entropy index, and its
 decomposition in between- and within-group components.
 }
 \description{
-The function will return the so called Related/Unerlated Variety vales for
-each region in each year.
+The function will return the information entropy of a given vector of
+frequences and the same information decomposed in a between- and a
+within-groups component. The last two are the ones also respectively called
+Unrelated and Related Variety by the Regional Economics of Innovation
+literature.
 }
 \details{
-The function will return the so called entropy decomposition theorem
-so that, besides the overall entropy level, also the value of the between
-and within group entropy is provided. Internally the function computes and
-temorarily stores also other values. However they are not provided in the
-oputput DB.
+The function will return the so called Entropy Decomposition Theorem
+so that, besides the overall entropy level, also the value of the between-
+and within-groups information entropy is provided. Internally the function
+computes and temorarily stores also other values. However they are not
+provided in the oputput dataframe.
+See:
+\itemize{
+\item{Theil (1972) \emph{Statistical Decomposition Analysis}, North-Holland;}
+\item{Zadjenweber (1972) "Une Application de la Th{\'e}orie de l’Information
+{\`a} l'{\'E}conomie: La Mesure de la Concentration, \emph{Revue d'Economie
+Politique}, 82, 486–-510;}
+\item{Attaran (1985) "Industrial Diversity and Economic Performance in U.S.
+Areas, \emph{The Annals of Regional Science}, 20, 44--54;}
+\item{Frenken (2007) "Entropy statistics and information theory", in
+Hanusch and Pyka (Eds.) \emph{Elgar Companion to Neo-Schumpeterian
+Economics}, Edward Elgar.}
+\item{Frenken, van Oort and Verburg (2007) "Related Variety, Unrelated
+Variety and Regional Economic Growth", \emph{Regional Studies}, 41,
+685--697;}
+\item{Quatraro (2010) 'Knowledge Coherence, Variety and Economic Growth:
+Manufacturing Evidence from Italian Regions', \emph{Research Policy}, 39,
+1289--1302;}
+\item{Rocchetta and Mina (2017), "Technological Coherence and the Adaptive
+Resilience of Regional Economies", \emph{Papers in Evolutionary Economic
+Geography}, Utrecht University.}
+}
 }
 \examples{
 Variety(data = data, kng_nbr = N, geo_dim = region,

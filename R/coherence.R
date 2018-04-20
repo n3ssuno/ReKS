@@ -3,24 +3,34 @@
 #'
 #' @title
 #' Regional Coherence Index
+#'
 #' @description
-#' a
+#' The function computes the so called Coherence index.
+#'
 #' @details
+#' The function computes the so called Coherence index.
+#' It assumes that the "universe" from which you derive the distribution of
+#' reference is composed by all the information provided in the database, and
+#' only this.
+#' You can use it both on a panel data set (if you identify also a column with
+#' a temporal indication of the observations) or on cross-section data (by
+#' leaveing the parameter just said as NULL).
 #' See:
 #' \itemize{
 #' \item{Teece, Rumelt, Dosi and Winter (1994) 'Understanding Corporate
-#'        Coherence: Theory and Evidence', \emph{Journal of Economic
-#'        Behavior \& Organization}, 23, 1-30;}
+#' Coherence: Theory and Evidence', \emph{Journal of Economic Behavior \&
+#' Organization}, 23, 1-30;}
 #' \item{Nesta and Saviotti (2005) 'Coherence of the Knowledge Base and the
-#'        Firm's Innovative Performance: Evidence from the U.S. Pharmaceutical
-#'        Industry', \emph{Journal of Industrial Economics}, 53, 123-142;}
+#' Firm's Innovative Performance: Evidence from the U.S. Pharmaceutical
+#' Industry', \emph{Journal of Industrial Economics}, 53, 123-142;}
 #' \item{Nesta and Saviotti (2006) 'Firm Knowledge and Market Value in
-#'        Biotechnology', \emph{Industrial and Corporate Change}, 15, 625-652;}
+#' Biotechnology', \emph{Industrial and Corporate Change}, 15, 625-652;}
 #' \item{Quatraro (2010) 'Knowledge Coherence, Variety and Economic Growth:
-#'        Manufacturing Evidence from Italian Regions', \emph{Research Policy},
-#'        39, 1289-1302.}
+#' Manufacturing Evidence from Italian Regions', \emph{Research Policy}, 39,
+#' 1289-1302.}
+#'
 #' }
-#' @param data It is expected to be a data.frame in 'long' format.
+#' @param data It is expected to be a dataframe in "long" format.
 #' @param geo_dim It is the name of the column of the data.frame that
 #' represents its geographical dimension (e.g., the different regions of
 #' analysis).
