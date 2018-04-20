@@ -63,23 +63,16 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
 
     data <- as.data.frame(data)
 
-    if (is.null(time_dim)) {
+    time_dim <- deparse(substitute(time_dim))
+    geo_dim <- deparse(substitute(geo_dim))
+    kng_dim <- deparse(substitute(kng_dim))
+    kng_nbr <- deparse(substitute(kng_nbr))
+
+    time_dim_added <- FALSE
+    if (time_dim == "NULL") {
         data$AddedTimeDim <- 1
         time_dim <- "AddedTimeDim"
         time_dim_added <- TRUE
-    }
-
-    if (!is.character(time_dim)) {
-        time_dim <- deparse(substitute(time_dim))
-    }
-    if (!is.character(geo_dim)) {
-        geo_dim <- deparse(substitute(geo_dim))
-    }
-    if (!is.character(kng_dim)) {
-        kng_dim <- deparse(substitute(kng_dim))
-    }
-    if (!is.character(kng_nbr)) {
-        kng_nbr <- deparse(substitute(kng_nbr))
     }
 
     data <- data[complete.cases(data[, c(time_dim, geo_dim,
