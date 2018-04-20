@@ -8,7 +8,8 @@
 #' The function will return the frequency distribution of a given vector.
 #' It is useful for entropy functions.
 #'
-#' @details
+#' @details The function will return the frequency distribution of a given vector.
+#' It is useful for entropy functions.
 #'
 #' @param data Frequency distribution of a vector of elements.
 #' @return The information entropy level of the vector.
@@ -17,7 +18,7 @@
 #' etpy <- entropy(frequences)
 
 entropy <- function(data) {
-    freqs <- get_freqs(data)
+    freqs <- .get_freqs(data)
     etp <- -sum(freqs * log2(freqs))
     etp[!is.finite(etp)] <- 0
     return(etp)

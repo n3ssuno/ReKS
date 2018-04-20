@@ -2,10 +2,9 @@
 % Please edit documentation in R/coherence.R
 \name{coherence}
 \alias{coherence}
-\alias{Coherence}
 \title{Regional Coherence Index}
 \usage{
-Coherence(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL)
+coherence(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL)
 }
 \arguments{
 \item{data}{It is expected to be a data.frame in 'long' format.}
@@ -50,6 +49,6 @@ See:
 }
 }
 \examples{
-RCI <- Coherence(data = regpat, time_dim = year, geo_dim = NUTS2,
+RCI <- coherence(data = df, time_dim = year, geo_dim = NUTS2,
 kng_dim = IPC.3dig, kng_nbr = N.patents)
 }

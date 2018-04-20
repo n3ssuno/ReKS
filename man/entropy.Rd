@@ -17,7 +17,8 @@ The function will return the frequency distribution of a given vector.
 It is useful for entropy functions.
 }
 \details{
-
+The function will return the frequency distribution of a given vector.
+It is useful for entropy functions.
 }
 \examples{
 frequences <- get_freqs(c(1,3,5,2,4,9,1,6,10))

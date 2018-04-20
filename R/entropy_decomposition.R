@@ -24,7 +24,7 @@
 #' etpy_decomp <- entropy_decomposition(table(data), grps)
 
 entropy_decomposition <- function(data, groups) {
-    Pg <- by(get_freqs(data), groups, sum)
+    Pg <- by(.get_freqs(data), groups, sum)
     BG <- RKS::entropy(Pg)
     WG <- RKS::entropy(data) - BG
     by_group <- log2(Pg) + 1/Pg * by(data, groups, RKS::entropy)

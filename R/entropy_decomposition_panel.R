@@ -48,7 +48,7 @@ entropy_decomposition_panel <- function(data, kng_nbr, kng_dim_upper,
     # Preliminary transformations and checks -------------
 
     data <- as.data.frame(data)
-    if (!all(complete.cases(df))) {
+    if (!all(complete.cases(data))) {
         warning(paste('There is some non complete row in the database.\n',
                       'I cannot guarrenty you about the results.'))
     }

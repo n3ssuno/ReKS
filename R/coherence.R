@@ -36,7 +36,7 @@
 #' @return A data.frame with the Coherence Index of each geographical area
 #' in each time step of analysis.
 #' @examples
-#' RCI <- coherence(data = regpat, time_dim = year, geo_dim = NUTS2,
+#' RCI <- coherence(data = df, time_dim = year, geo_dim = NUTS2,
 #' kng_dim = IPC.3dig, kng_nbr = N.patents)
 
 coherence <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
@@ -44,12 +44,12 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
         stop(paste0("Package \"reshape2\" needed for this function to work. ",
             "Please install it."), call. = FALSE)
     }
-    library(reshape2)
+    #library(reshape2)
     if (!requireNamespace("plyr", quietly = TRUE)) {
         stop(paste0("Package \"plyr\" needed for this function to work. ",
             "Please install it."), call. = FALSE)
     }
-    library(plyr)
+    #library(plyr)
 
     data <- as.data.frame(data)
 
@@ -77,7 +77,9 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
 
     C <- unique(data[, c(geo_dim, kng_dim)])
     C$C <- 1
-    C <- dcast(C, formula(paste(geo_dim, "~", kng_dim)), value.var = "C")
+    C <- reshape2::dcast(C,
+                         formula(paste(geo_dim, "~", kng_dim)),
+                         value.var = "C")
     C[is.na(C)] <- 0
     gnames <- C[, 1]
     C <- as.matrix(C[, -1])
@@ -105,9 +107,9 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
     diag(ones1) <- 0
 
     RCI <- lapply(unique(data[, time_dim]), function(t) {
-        ee <- dcast(data[which(data[, time_dim] == t), ],
-                    formula(paste(geo_dim, "~", kng_dim)),
-                    value.var = kng_nbr, fun.aggregate = sum)
+        ee <- reshape2::dcast(data[which(data[, time_dim] == t), ],
+                              formula(paste(geo_dim, "~", kng_dim)),
+                              value.var = kng_nbr, fun.aggregate = sum)
         gnames <- ee[, 1]
         ee <- as.matrix(ee[, -1])
         rownames(ee) <- gnames
@@ -130,8 +132,8 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
         return(R)
     })
     names(RCI) <- unique(data[, time_dim])
-    RCI <- join_all(RCI, geo_dim)
-    RCI <- melt(RCI)
+    RCI <- plyr::join_all(RCI, geo_dim)
+    RCI <- reshape2::melt(RCI)
     colnames(RCI) <- c(geo_dim, time_dim, "Coherence.Index")
     if (time_dim_added) {
         RCI <- RCI[, c(geo_dim, "Coherence.Index")]
