@@ -1,8 +1,8 @@
 #' @name
-#' complexity
+#' fitness
 #'
 #' @title
-#' Regional Knowledge Complexity Index
+#' Regional Knowledge Fitness Index
 #'
 #' @description
 #'
@@ -10,13 +10,9 @@
 #'
 #' See:
 #' \itemize{
-#' \item{Hidalgo, Klinger, Barab{\'a}si and Hausmann (2007) "The Product Space
-#' Conditions the Development of Nations", \emph{Science}, 317, 482--487;}
-#' \item{Hidalgo and Hausmann (2009) "The Building Blocks of Economic
-#' Complexity", \emph{PNAS}, 106, 10570--10575;}
-#' \item{Antonelli, Crespi, Mongeau Ospina and Scellato (2017) "Knowledge
-#' Composition, Jacobs Externalities and Innovation Performance in European
-#' Regions", \emph{Regional Studies}, 51, 1708--1720;}
+#' \item{Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2012)
+#' "A New Metrics for Countries' Fitness and Products' Complexity",
+#' \emph{Scientific Reports}, 2, 1--7;}
 #' \item{Balland and Rigby (2017) "The Geography of Complex Knowledge",
 #' \emph{Economic Geography}, 93, 1--23.}
 #' }
@@ -33,13 +29,13 @@
 #' @param time_dim It is the name of the column of the data.frame that
 #' represents its temporal dimension (e.g., the different years of analysis).
 #' It is an optional parameter
-#' @return A data.frame with the Complexity Index of each geographical area
+#' @return A data.frame with the Fitness Index of each geographical area
 #' in each time step of analysis.
 #' @examples
-#' RKCI <- complexity(data = df, time_dim = year, geo_dim = NUTS2,
+#' RKFI <- fitness(data = df, time_dim = year, geo_dim = NUTS2,
 #' kng_dim = IPC.3dig, kng_nbr = N.patents)
 
-complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
+fitness <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
     if (!requireNamespace("reshape2", quietly = TRUE)) {
         stop(paste0("Package \"reshape2\" needed for this function to work. ",
                     "Please install it."), call. = FALSE)
@@ -62,13 +58,13 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
     data <- data[complete.cases(data[, c(time_dim, geo_dim,
                                          kng_dim, kng_nbr)]), ]
 
-    RKCI <- lapply(unique(data[, time_dim]), function(t) {
+    RKFI <- lapply(unique(data[, time_dim]), function(t) {
         ee <- unique(data[which(data[, time_dim] == t),
                           c(geo_dim, kng_nbr, kng_dim)])
         ee <- reshape2::dcast(ee,
                               formula(paste(geo_dim, "~", kng_dim)),
-                                            value.var = kng_nbr,
-                                            fun.aggregate = sum)
+                              value.var = kng_nbr,
+                              fun.aggregate = sum)
         gnames <- ee[, 1]
         ee <- as.matrix(ee[, -1])
         rownames(ee) <- gnames
@@ -84,41 +80,57 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
             mm <- mm[, -which(colSums(mm) == 0)]
         }
 
-        diversity <- rowSums(mm)
-        ubiquity  <- colSums(mm)
+        ff <- rep(1, nrow(mm))
+        cc <- rep(1, ncol(mm))
+        i <- 0
+        while (TRUE) {
+            ff1 <- rowSums(t(t(mm) * cc))
+            cc1 <- 1 / rowSums(t(mm) / ff)
 
-        mm_tilde <- t(t(mm) / ubiquity) %*% t(mm)
-        mm_tilde <- mm_tilde / diversity
+            # Normalisation needed to avoid possible divergences
+            #  due to the hyperbolic nature of the second equation
+            ff1 <- ff1 / mean(ff1)
+            cc1 <- cc1 / mean(cc1)
 
-        if (!all(round(rowSums(mm_tilde)) == 1)) {
-            stop(paste("The matrix is not row-stochastic.\n",
-                 "It is not possible to compute the measure."))
+            # TODO
+            # This is an arbitrary choice of mine and it is not in the
+            #  original papers. Maybe it could be better and closer to the
+            #  original sources to use 20 recursions. Another thing to check
+            #  and decide is what happens in the function if the algorithm
+            #  does not converge
+            if (all((ff - ff1) < 0.0000000001) &
+                all((cc - cc1) < 0.0000000001)) {
+                ff <- ff1
+                cc <- cc1
+                # print(paste0(t, ": ", i))
+                break()
+            }
+
+            ff <- ff1
+            cc <- cc1
+
+            i <- i + 1
         }
-        if (round(Re(as.complex(eigen(mm_tilde)$value[1]))) != 1) {
-            stop(paste("The first eigen-value is different from 1.",
-                       "It is not possible to compute the measure."))
-        }
 
-        CI <- eigen(mm_tilde)$vectors[, 2]
-        CI <- Re(as.complex(CI))
+        ff <- cbind.data.frame(names(ff), ff)
+        colnames(ff) <- c(geo_dim, as.character(t))
 
-        if (cor(CI, diversity,
-                use = "pairwise.complete.obs", method = "spearman") < 0) {
-            CI <- -CI
-        }
-
-        CI <- cbind.data.frame(rownames(mm_tilde), CI)
-        colnames(CI) <- c(geo_dim, as.character(t))
-
-        return(CI)
+        return(ff)
     })
 
-    names(RKCI) <- unique(data[, time_dim])
-    RKCI <- plyr::join_all(RKCI, geo_dim)
-    RKCI <- reshape2::melt(RKCI)
-    colnames(RKCI) <- c(geo_dim, time_dim, "Complexity.index")
+    names(RKFI) <- unique(data[, time_dim])
+    RKFI <- plyr::join_all(RKFI, geo_dim)
+    RKFI <- reshape2::melt(RKFI)
+    colnames(RKFI) <- c(geo_dim, time_dim, "Fitness.index")
     if (time_dim_added) {
-        RKCI <- RKCI[, c(geo_dim, "Complexity.index")]
+        RKFI <- RKFI[, c(geo_dim, "Fitness.index")]
     }
-    return(RKCI)
+
+    # TODO
+    # It seems there's some problem about the use of memory, but I don't
+    #  know if it's the right way to solve the problem
+    gc()
+
+
+    return(RKFI)
 }
