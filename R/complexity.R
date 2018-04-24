@@ -33,13 +33,16 @@
 #' @param time_dim It is the name of the column of the data.frame that
 #' represents its temporal dimension (e.g., the different years of analysis).
 #' It is an optional parameter
+#' @param scale It is TRUE by default. Otherwise, the Complexity Index is not
+#' standardised (CI - mean[CI] / sd[CI]).
 #' @return A data.frame with the Complexity Index of each geographical area
 #' in each time step of analysis.
 #' @examples
 #' RKCI <- complexity(data = df, time_dim = year, geo_dim = NUTS2,
 #' kng_dim = IPC.3dig, kng_nbr = N.patents)
 
-complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
+complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
+                       scale = TRUE) {
     if (!requireNamespace("reshape2", quietly = TRUE)) {
         stop(paste0("Package \"reshape2\" needed for this function to work. ",
                     "Please install it."), call. = FALSE)
@@ -63,19 +66,9 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
                                          kng_dim, kng_nbr)]), ]
 
     RKCI <- lapply(unique(data[, time_dim]), function(t) {
-        ee <- unique(data[which(data[, time_dim] == t),
-                          c(geo_dim, kng_nbr, kng_dim)])
-        ee <- reshape2::dcast(ee,
-                              formula(paste(geo_dim, "~", kng_dim)),
-                                            value.var = kng_nbr,
-                                            fun.aggregate = sum)
-        gnames <- ee[, 1]
-        ee <- as.matrix(ee[, -1])
-        rownames(ee) <- gnames
-
-        RCA <- t(t(ee / rowSums(ee)) / (colSums(ee) / sum(ee)))
-
-        mm <- ifelse(RCA >= 1, 1, 0)
+        data_subset <- data[which(data[, time_dim] == t), ]
+        mm <- .get_biadj_matrix(data_subset, geo_dim, kng_dim,
+                                RTA = TRUE, kng_nbr)
 
         if (any(rowSums(mm) == 0)) {
             mm <- mm[-which(rowSums(mm) == 0), ]
@@ -84,11 +77,10 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
             mm <- mm[, -which(colSums(mm) == 0)]
         }
 
-        diversity <- rowSums(mm)
-        ubiquity  <- colSums(mm)
+        du <- .get_du(mm)
 
-        mm_tilde <- t(t(mm) / ubiquity) %*% t(mm)
-        mm_tilde <- mm_tilde / diversity
+        mm_tilde <- t(t(mm) / du$ubiquity) %*% t(mm)
+        mm_tilde <- mm_tilde / du$diversification
 
         if (!all(round(rowSums(mm_tilde)) == 1)) {
             stop(paste("The matrix is not row-stochastic.\n",
@@ -102,13 +94,18 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
         CI <- eigen(mm_tilde)$vectors[, 2]
         CI <- Re(as.complex(CI))
 
-        if (cor(CI, diversity,
+        if (cor(CI, du$diversification,
                 use = "pairwise.complete.obs", method = "spearman") < 0) {
             CI <- -CI
         }
 
         CI <- cbind.data.frame(rownames(mm_tilde), CI)
         colnames(CI) <- c(geo_dim, as.character(t))
+
+        if (scale == TRUE) {
+            CI[, 2] <- scale(CI[, 2])
+            warning('The values of the index have been standardised.')
+        }
 
         return(CI)
     })
@@ -120,5 +117,10 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
     if (time_dim_added) {
         RKCI <- RKCI[, c(geo_dim, "Complexity.index")]
     }
+
+    class(RKCI) <- c('data.frame', 'rks_hh_complexity')
+    attr(RKCI, 'diversification') <- du$diversification
+    attr(RKCI, 'ubiquity') <- du$ubiquity
+
     return(RKCI)
 }

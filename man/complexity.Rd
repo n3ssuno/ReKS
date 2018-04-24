@@ -4,7 +4,7 @@
 \alias{complexity}
 \title{Regional Knowledge Complexity Index}
 \usage{
-complexity(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL)
+complexity(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL, scale = TRUE)
 }
 \arguments{
 \item{data}{It is expected to be a dataframe in "long" format.}
@@ -24,6 +24,9 @@ patents a region has in a given year in a given patent class).}
 \item{time_dim}{It is the name of the column of the data.frame that
 represents its temporal dimension (e.g., the different years of analysis).
 It is an optional parameter}
+
+\item{scale}{It is TRUE by default. Otherwise, the Complexity Index is not
+standardised (CI - mean[CI] / sd[CI]).}
 }
 \value{
 A data.frame with the Complexity Index of each geographical area

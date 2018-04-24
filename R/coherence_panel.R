@@ -73,15 +73,7 @@ coherence_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim) {
 
     # Null model (Hypergeometric distribution) ---------------
 
-    C <- unique(data[, c(geo_dim, kng_dim)])
-    C$C <- 1
-    C <- reshape2::dcast(C,
-                         formula(paste(geo_dim, "~", kng_dim)),
-                         value.var = "C")
-    C[is.na(C)] <- 0
-    gnames <- C[, 1]
-    C <- as.matrix(C[, -1])
-    rownames(C) <- gnames
+    C <- .get_biadj_matrix(data, geo_dim, kng_dim)
 
     J <- t(C) %*% C
 
@@ -97,16 +89,10 @@ coherence_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim) {
 
     t <- (J - mu)/sqrt(s2)
 
-    t1 <- t
-    diag(t1) <- 0
-
-    ones <- matrix(1, nrow = nrow(t), ncol = nrow(t))
-    ones1 <- ones
-    diag(ones1) <- 0
+    diag(t) <- 0
 
     null_model <- list()
-    null_model$t1 <- t1
-    null_model$ones1 <- ones1
+    null_model$t <- t
     class(null_model) <- "reks_null_model"
 
     # Coherence index for panel data ---------------

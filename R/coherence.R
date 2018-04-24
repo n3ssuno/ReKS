@@ -78,15 +78,7 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr,
     # Null model (Hypergeometric distribution) ---------------
 
     if (is.null(null_model)) {
-        C <- unique(data[, c(geo_dim, kng_dim)])
-        C$C <- 1
-        C <- reshape2::dcast(C,
-                             formula(paste(geo_dim, "~", kng_dim)),
-                             value.var = "C")
-        C[is.na(C)] <- 0
-        gnames <- C[, 1]
-        C <- as.matrix(C[, -1])
-        rownames(C) <- gnames
+        C <- .get_biadj_matrix(data, geo_dim, kng_dim)
 
         J <- t(C) %*% C
 
@@ -102,16 +94,10 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr,
 
         t <- (J - mu)/sqrt(s2)
 
-        t1 <- t
-        diag(t1) <- 0
-
-        ones <- matrix(1, nrow = nrow(t), ncol = nrow(t))
-        ones1 <- ones
-        diag(ones1) <- 0
+        diag(t) <- 0
 
         null_model <- list()
-        null_model$t1 <- t1
-        null_model$ones1 <- ones1
+        null_model$t <- t
         class(null_model) <- "reks_null_model"
     }
 
@@ -121,24 +107,23 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr,
         stop('null_model must be of "reks_null_model" class')
     }
 
-    ee <- reshape2::dcast(data,
-                          formula(paste(geo_dim, "~", kng_dim)),
-                          value.var = kng_nbr, fun.aggregate = sum)
-    gnames <- ee[, 1]
-    ee <- as.matrix(ee[, -1])
-    rownames(ee) <- gnames
+    ee <- .get_biadj_matrix(data, geo_dim, kng_dim, RTA = FALSE, kng_nbr)
+
     en <- colnames(ee)
-    nc <- setdiff(colnames(null_model$t1), colnames(ee))
+    nc <- setdiff(colnames(null_model$t), colnames(ee))
     en <- c(en, nc)
     for (i in nc) {
         ee <- cbind(ee, 0)
     }
     colnames(ee) <- en
-    col.order <- colnames(null_model$t1)
+    col.order <- colnames(null_model$t)
     ee <- ee[, col.order]
 
-    WAR <- ee %*% null_model$t1 / ee %*% null_model$ones1
-    R <- rowSums(WAR * ee/rowSums(ee))
+    ones <- matrix(1, nrow = nrow(null_model$t), ncol = nrow(null_model$t))
+    diag(ones) <- 0
+
+    WAR <- ee %*% null_model$t / ee %*% ones
+    R <- rowSums(WAR * ee / rowSums(ee))
     R[is.nan(R)] <- 0
     R <- as.data.frame(R)
     R <- cbind(rownames(R), R)

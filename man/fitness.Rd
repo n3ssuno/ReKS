@@ -38,6 +38,13 @@ See:
 \item{Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2012)
 "A New Metrics for Countries' Fitness and Products' Complexity",
 \emph{Scientific Reports}, 2, 1--7;}
+\item{Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2013)
+"Economic Complexity: Conceptual Grounding of a New Metrics for Global
+Competitiveness", \emph{Journal of Economic Dynamics and Control}, 37,
+1683--1691;}
+\item{Cristelli, Gabrielli, Tacchella, Caldarelli and Pietronero (2013)
+"Measuring the Intangibles: A Metrics for the Economic Complexity of
+Countries and Products", \emph{PLOS ONE}, 8, e70726;}
 \item{Balland and Rigby (2017) "The Geography of Complex Knowledge",
 \emph{Economic Geography}, 93, 1--23.}
 }

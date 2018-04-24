@@ -13,6 +13,13 @@
 #' \item{Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2012)
 #' "A New Metrics for Countries' Fitness and Products' Complexity",
 #' \emph{Scientific Reports}, 2, 1--7;}
+#' \item{Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2013)
+#' "Economic Complexity: Conceptual Grounding of a New Metrics for Global
+#' Competitiveness", \emph{Journal of Economic Dynamics and Control}, 37,
+#' 1683--1691;}
+#' \item{Cristelli, Gabrielli, Tacchella, Caldarelli and Pietronero (2013)
+#' "Measuring the Intangibles: A Metrics for the Economic Complexity of
+#' Countries and Products", \emph{PLOS ONE}, 8, e70726;}
 #' \item{Balland and Rigby (2017) "The Geography of Complex Knowledge",
 #' \emph{Economic Geography}, 93, 1--23.}
 #' }
@@ -59,19 +66,9 @@ fitness <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL) {
                                          kng_dim, kng_nbr)]), ]
 
     RKFI <- lapply(unique(data[, time_dim]), function(t) {
-        ee <- unique(data[which(data[, time_dim] == t),
-                          c(geo_dim, kng_nbr, kng_dim)])
-        ee <- reshape2::dcast(ee,
-                              formula(paste(geo_dim, "~", kng_dim)),
-                              value.var = kng_nbr,
-                              fun.aggregate = sum)
-        gnames <- ee[, 1]
-        ee <- as.matrix(ee[, -1])
-        rownames(ee) <- gnames
-
-        RCA <- t(t(ee / rowSums(ee)) / (colSums(ee) / sum(ee)))
-
-        mm <- ifelse(RCA >= 1, 1, 0)
+        data_subset <- data[which(data[, time_dim] == t), ]
+        mm <- .get_biadj_matrix(data_subset, geo_dim, kng_dim,
+                                RTA = TRUE, kng_nbr)
 
         if (any(rowSums(mm) == 0)) {
             mm <- mm[-which(rowSums(mm) == 0), ]
