@@ -1,7 +1,7 @@
 Package: RKS
 Type: Package
 Title: Regional Knowledge Space
-Version: 0.2.0
+Version: 0.2.5
 Authors@R: person("Carlo", "Bottai", 
     email = "carlo.bottai@unito.it", 
     role = c("aut", "cre"))

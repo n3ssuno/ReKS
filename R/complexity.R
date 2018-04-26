@@ -32,7 +32,17 @@
 #' patents a region has in a given year in a given patent class).
 #' @param time_dim It is the name of the column of the data.frame that
 #' represents its temporal dimension (e.g., the different years of analysis).
-#' It is an optional parameter
+#' It is an optional parameter.
+#' @param binary_mode It is "RTA" by default. The possible values are: "simple"
+#' (if there is at least a patent in the geo. area in the particular tech. class
+#' it is 1, and 0 otherwise); "RTA" or "RCA" (Balassa method);
+#' "higher_quartiles" (similar to "simple", but it exludes the first quartile
+#' (it seems the best choice, see below); "higher_quartiles_kng" (similar to
+#' 'higher_quartiles', but the quartiles are computed for each knowledge class,
+#' assuming that some are more "ubiquitous" than others). Warning: look
+#' carefully at the plot_biadj_matrix() output because I personally observed
+#' that with RTA applied to patent data you do not have the triangular structure
+#' observed in the trade data.
 #' @param scale It is TRUE by default. Otherwise, the Complexity Index is not
 #' standardised (CI - mean[CI] / sd[CI]).
 #' @return A data.frame with the Complexity Index of each geographical area
@@ -42,7 +52,7 @@
 #' kng_dim = IPC.3dig, kng_nbr = N.patents)
 
 complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
-                       scale = TRUE) {
+                       binary_mode = "RTA", scale = TRUE) {
     if (!requireNamespace("reshape2", quietly = TRUE)) {
         stop(paste0("Package \"reshape2\" needed for this function to work. ",
                     "Please install it."), call. = FALSE)
@@ -67,8 +77,8 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
 
     RKCI <- lapply(unique(data[, time_dim]), function(t) {
         data_subset <- data[which(data[, time_dim] == t), ]
-        mm <- .get_biadj_matrix(data_subset, geo_dim, kng_dim,
-                                RTA = TRUE, kng_nbr)
+        mm <- .get_biadj_matrix(data_subset, geo_dim, kng_dim, kng_nbr,
+                                binary_mode)
 
         if (any(rowSums(mm) == 0)) {
             mm <- mm[-which(rowSums(mm) == 0), ]
@@ -113,14 +123,32 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
     names(RKCI) <- unique(data[, time_dim])
     RKCI <- plyr::join_all(RKCI, geo_dim)
     RKCI <- reshape2::melt(RKCI)
-    colnames(RKCI) <- c(geo_dim, time_dim, "Complexity.index")
+    colnames(RKCI) <- c(geo_dim, time_dim, "Complexity")
     if (time_dim_added) {
-        RKCI <- RKCI[, c(geo_dim, "Complexity.index")]
+        RKCI <- RKCI[, c(geo_dim, "Complexity")]
     }
 
     class(RKCI) <- c('data.frame', 'rks_hh_complexity')
-    attr(RKCI, 'diversification') <- du$diversification
-    attr(RKCI, 'ubiquity') <- du$ubiquity
+    # TODO
+    # In that way it returns only the last year
+    # attr(RKCI, 'diversification') <- du$diversification
+    # attr(RKCI, 'ubiquity') <- du$ubiquity
+    attr(RKCI, 'standardised') <- ifelse(scale == TRUE, TRUE, FALSE)
+    if (binary_mode == 'RTA') {
+        attr(RKCI, "binary_mode") <- 'RTA'
+    }
+    if (binary_mode == 'RCA') {
+        attr(RKCI, "binary_mode") <- 'RCA'
+    }
+    if (binary_mode == 'simple') {
+        attr(RKCI, "binary_mode") <- 'simple'
+    }
+    if (binary_mode == "higher_quartiles") {
+        attr(RKCI, "binary_mode") <- 'higher_quartiles'
+    }
+    if (binary_mode == "higher_quartiles_kng") {
+        attr(RKCI, "binary_mode") <- 'higher_quartiles_kng'
+    }
 
     return(RKCI)
 }

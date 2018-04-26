@@ -4,7 +4,8 @@
 \alias{fitness}
 \title{Regional Knowledge Fitness Index}
 \usage{
-fitness(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL)
+fitness(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
+  binary_mode = "RTA")
 }
 \arguments{
 \item{data}{It is expected to be a dataframe in "long" format.}
@@ -23,7 +24,18 @@ patents a region has in a given year in a given patent class).}
 
 \item{time_dim}{It is the name of the column of the data.frame that
 represents its temporal dimension (e.g., the different years of analysis).
-It is an optional parameter}
+It is an optional parameter.}
+
+\item{binary_mode}{It is "RTA" by default. The possible values are: "none"
+(weighted matrix, i.e. not binary); "simple" (if there is at least a patent
+in the geo. area in the particular tech. class it is 1, and 0 otherwise);
+"RTA" or "RCA" (Balassa method); "higher_quartiles" (similar to "simple",
+but it exludes the first quartile (it seems the best choice, see below);
+"higher_quartiles_kng" (similar to 'higher_quartiles', but the quartiles are
+computed for each knowledge class, assuming that some are more "ubiquitous"
+than others). Warning: look carefully at the plot_biadj_matrix() output
+because I personally observed that with RTA applied to patent data you do not
+have the triangular structure observed in the trade data.}
 }
 \value{
 A data.frame with the Fitness Index of each geographical area

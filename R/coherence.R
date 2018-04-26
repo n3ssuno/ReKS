@@ -127,7 +127,7 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr,
     R[is.nan(R)] <- 0
     R <- as.data.frame(R)
     R <- cbind(rownames(R), R)
-    colnames(R) <- c(geo_dim, "Coherence.Index")
+    colnames(R) <- c(geo_dim, "Coherence")
 
     return(R)
 }

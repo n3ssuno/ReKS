@@ -1,53 +1,87 @@
-.get_biadj_matrix <- function(data, geo_dim, kng_dim,
-                               RTA = FALSE, kng_nbr = NULL) {
+.get_biadj_matrix <- function(data, geo_dim, kng_dim, kng_nbr,
+                               binary_mode = "none") {
     # It returns a binary biadjacency matrix
     # It is possible to use the RTAs as a criterion of binarisation or simply
     #  to assume that each observation produces a 1 in the matrix, regardless of
     #  its "value"
 
+    # Possible binary_mode options:
+    # - none: weighted matrix (not binary);
+    # - simple: if there is at least a patent in the geo. area in the
+    #    particular tech. class it is 1, and 0 otherwise;
+    # - RTA or RCA: Balassa method;
+    # - higher_quartiles: similar to 'simple', but it exludes the first quartile
+    #    (it seems the best choice);
+    # - higher_quartiles_kng: similar to 'higher_quartiles', but the quartiles
+    #    are computed for each knowledge class, assuming that some are more
+    #    "ubiquitous" than others.
+
     # Preliminary controls ---------------
-    if (isTRUE(RTA) & (is.null(kng_nbr) || kng_nbr == 'NULL')) {
-        stop(paste('You must provide a kng_nbr column name in the options ',
-                   'if you want to compute the Relative Technological ',
-                   'Advantages of each geographical area.'))
-    }
-    # if (!is.null(kng_nbr) & !isTRUE(RTA)) {
-    #     stop(paste('By now, it is possible to use only the Relative ',
-    #                'Technological Advantages as a way to have binary matrices ',
-    #                'from non-binary ones. Please, choose RTA = TRUE in the ',
-    #                'options.'))
-    # }
+
     data <- as.data.frame(data)
 
     # Main function ---------------
-    if (is.null(kng_nbr)) {
-        BM <- unique(data[, c(geo_dim, kng_dim)])
-        BM$C <- 1
-        BM <- reshape2::dcast(BM,
-                              formula(paste(geo_dim, "~", kng_dim)),
-                              value.var = "C")
-    } else {
-        BM <- unique(data[, c(geo_dim, kng_nbr, kng_dim)])
-        BM <- reshape2::dcast(BM,
-                              formula(paste(geo_dim, "~", kng_dim)),
-                              value.var = kng_nbr,
-                              fun.aggregate = sum)
-    }
+    # if (is.null(kng_nbr)) {
+    #     BM <- unique(data[, c(geo_dim, kng_dim)])
+    #     BM$C <- 1
+    #     BM <- reshape2::dcast(BM,
+    #                           formula(paste(geo_dim, "~", kng_dim)),
+    #                           value.var = "C")
+    # } else {
+    BM <- unique(data[, c(geo_dim, kng_nbr, kng_dim)])
+    BM <- reshape2::dcast(BM,
+                          formula(paste(geo_dim, "~", kng_dim)),
+                          value.var = kng_nbr,
+                          fun.aggregate = sum)
+    # }
 
     BM[is.na(BM)] <- 0
     gnames <- BM[, 1]
     BM <- as.matrix(BM[, -1])
     rownames(BM) <- gnames
 
-    if (isTRUE(RTA)) {
+    if (binary_mode == 'RTA' | binary_mode == 'RCA') {
         BM <- .get_rta(BM, binary = TRUE)
     }
+    if (binary_mode == 'simple') {
+        BM[BM > 0] <- 1
+    }
+    if (binary_mode == "higher_quartiles") {
+        fq <- quantile(BM[BM > 0])[2]
+        BM[BM <  fq] <- 0
+        BM[BM >= fq] <- 1
+    }
+    if (binary_mode == "higher_quartiles_kng") {
+        fqs <- apply(BM, 2, function(col) quantile(col[col > 0])[2])
+        knames <- colnames(BM)
+        BM <- sapply(1:ncol(BM), function(col) {
+            bm <- BM[, col]
+            bm[bm <  fqs[col]] <- 0
+            bm[bm >= fqs[col]] <- 1
+            return(bm)
+        })
+        colnames(BM) <- knames
+    }
 
-    class(BM) <- c('rks_biadj_matrix', 'matrix')
+    class(BM) <- c('matrix', 'rks_biadj_matrix')
     attr(BM, "geo_dim") <- geo_dim
     attr(BM, "kng_dim") <- kng_dim
-    attr(BM, "binary")  <- TRUE
-    attr(BM, "RTA")     <- TRUE
+    attr(BM, "binary")  <- ifelse(binary_mode == "none", FALSE, TRUE)
+    if (binary_mode == 'RTA') {
+        attr(BM, "binary_mode") <- 'RTA'
+    }
+    if (binary_mode == 'RCA') {
+        attr(BM, "binary_mode") <- 'RCA'
+    }
+    if (binary_mode == 'simple') {
+        attr(BM, "binary_mode") <- 'simple'
+    }
+    if (binary_mode == "higher_quartiles") {
+        attr(BM, "binary_mode") <- 'higher_quartiles'
+    }
+    if (binary_mode == "higher_quartiles_kng") {
+        attr(BM, "binary_mode") <- 'higher_quartiles_kng'
+    }
 
     return(BM)
 }

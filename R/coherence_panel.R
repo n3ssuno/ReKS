@@ -107,7 +107,7 @@ coherence_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim) {
 
     RCI <- plyr::join_all(RCI, geo_dim)
     RCI <- reshape2::melt(RCI)
-    colnames(RCI) <- c(geo_dim, time_dim, "Coherence.Index")
+    colnames(RCI) <- c(geo_dim, time_dim, "Coherence")
 
     return(RCI)
 }
