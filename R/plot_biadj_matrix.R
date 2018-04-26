@@ -1,6 +1,7 @@
 # https://www.r-bloggers.com/creating-an-image-of-a-matrix-in-r-using-image/
 
-plot_biadj_matrix <- function(data, geo_dim, kng_dim, order = "DU") {
+plot_biadj_matrix <- function(data, geo_dim, kng_dim, kng_nbr,
+                              binary_mode, order = "DU") {
     # Order can be
     # - "DU" = diversification - ubiquity
     # - "FC" = fitness - complexity
@@ -11,8 +12,8 @@ plot_biadj_matrix <- function(data, geo_dim, kng_dim, order = "DU") {
     geo_dim <- deparse(substitute(geo_dim))
     kng_dim <- deparse(substitute(kng_dim))
     kng_nbr <- deparse(substitute(kng_nbr))
-    BM <- .get_biadj_matrix(data, geo_dim, kng_dim)
-    plot(BM)
+    BM <- .get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr, binary_mode)
+    plot(BM, order)
 }
 
 plot.rks_biadj_matrix <- function(BM, order = "DU") {

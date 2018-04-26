@@ -1,4 +1,4 @@
 exportPattern("^[^\\.]")
 # exportPattern("^[[:alpha:]]+")
-importFrom("stats", "complete.cases", "formula", "cor")
+importFrom("stats", "complete.cases", "formula", "cor", "quantile")
 importFrom("graphics", "plot", "image", "box")

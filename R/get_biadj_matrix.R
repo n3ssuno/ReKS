@@ -14,7 +14,9 @@
     #    (it seems the best choice);
     # - higher_quartiles_kng: similar to 'higher_quartiles', but the quartiles
     #    are computed for each knowledge class, assuming that some are more
-    #    "ubiquitous" than others.
+    #    "ubiquitous" than others;
+    # - higher_deciles_kng: similar to 'higher_quartiles_kng', but it excludes
+    #    the lower 10% rather than the lower 25%.
 
     # Preliminary controls ---------------
 
@@ -62,6 +64,18 @@
         })
         colnames(BM) <- knames
     }
+    if (binary_mode == "higher_deciles_kng") {
+        fqs <- apply(BM, 2,
+                     function(col) quantile(col[col > 0], seq(0, 1, .1))[2])
+        knames <- colnames(BM)
+        BM <- sapply(1:ncol(BM), function(col) {
+            bm <- BM[, col]
+            bm[bm <  fqs[col]] <- 0
+            bm[bm >= fqs[col]] <- 1
+            return(bm)
+        })
+        colnames(BM) <- knames
+    }
 
     class(BM) <- c('matrix', 'rks_biadj_matrix')
     attr(BM, "geo_dim") <- geo_dim
@@ -80,6 +94,9 @@
         attr(BM, "binary_mode") <- 'higher_quartiles'
     }
     if (binary_mode == "higher_quartiles_kng") {
+        attr(BM, "binary_mode") <- 'higher_quartiles_kng'
+    }
+    if (binary_mode == "higher_deciles_kng") {
         attr(BM, "binary_mode") <- 'higher_quartiles_kng'
     }
 

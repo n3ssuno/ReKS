@@ -26,14 +26,15 @@ patents a region has in a given year in a given patent class).}
 represents its temporal dimension (e.g., the different years of analysis).
 It is an optional parameter.}
 
-\item{binary_mode}{It is "RTA" by default. The possible values are: "none"
-(weighted matrix, i.e. not binary); "simple" (if there is at least a patent
-in the geo. area in the particular tech. class it is 1, and 0 otherwise);
-"RTA" or "RCA" (Balassa method); "higher_quartiles" (similar to "simple",
-but it exludes the first quartile (it seems the best choice, see below);
-"higher_quartiles_kng" (similar to 'higher_quartiles', but the quartiles are
-computed for each knowledge class, assuming that some are more "ubiquitous"
-than others). Warning: look carefully at the plot_biadj_matrix() output
+\item{binary_mode}{It is "RTA" by default. The possible values are: "simple"
+(if there is at least a patent in the geo. area in the particular tech. class
+it is 1, and 0 otherwise); "RTA" or "RCA" (Balassa method);
+"higher_quartiles" (similar to "simple", but it exludes the first quartile
+(it seems the best choice, see below); "higher_quartiles_kng" (similar to
+'higher_quartiles', but the quartiles are computed for each knowledge class,
+assuming that some are more "ubiquitous" than others); "higher_deciles_kng"
+(similar to 'higher_quartiles_kng', but it excludes the lower 10% rather than
+the lower 25%). Warning: look carefully at the plot_biadj_matrix() output
 because I personally observed that with RTA applied to patent data you do not
 have the triangular structure observed in the trade data.}
 }
