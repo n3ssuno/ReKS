@@ -110,8 +110,8 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
             CI <- -CI
         }
 
-        CI <- cbind.data.frame(rownames(mm_tilde), CI)
-        colnames(CI) <- c(geo_dim, as.character(t))
+        CI <- cbind.data.frame(rownames(mm_tilde), t, CI)
+        colnames(CI) <- c(geo_dim, time_dim, "Complexity")
 
         if (scale == TRUE) {
             CI[, 2] <- scale(CI[, 2])
@@ -121,10 +121,11 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
         return(CI)
     })
 
-    names(RKCI) <- unique(data[, time_dim])
-    RKCI <- plyr::join_all(RKCI, geo_dim)
-    RKCI <- reshape2::melt(RKCI)
-    colnames(RKCI) <- c(geo_dim, time_dim, "Complexity")
+    #names(RKCI) <- unique(data[, time_dim])
+    #RKCI <- plyr::join_all(RKCI, geo_dim)
+    #RKCI <- reshape2::melt(RKCI)
+    RKFI <- do.call("rbind.data.frame", RKFI)
+    #colnames(RKCI) <- c(geo_dim, time_dim, "Complexity")
     if (time_dim_added) {
         RKCI <- RKCI[, c(geo_dim, "Complexity")]
     }

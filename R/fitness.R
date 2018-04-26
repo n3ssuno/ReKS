@@ -111,7 +111,25 @@ fitness <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
                 all((cc - cc1) < 0.0000000001)) {
                 ff <- ff1
                 cc <- cc1
-                # print(paste0(t, ": ", i))
+                break()
+            }
+            if (i >= 200) {
+                ff <- rep(as.numeric(NA), nrow(mm))
+                cc <- rep(as.numeric(NA), ncol(mm))
+                names(ff) <- names(ff1)
+                names(cc) <- names(cc1)
+                if (time_dim_added) {
+                    warning(paste0('The algorithm failed to converge.\n',
+                                   'Maybe your matrix is not triangular ',
+                                   'as expected.\nYou can check it using ',
+                                   'plot_biadj_matrix()'))
+                } else {
+                    warning(paste0('The algorithm failed to converge ',
+                                   'for the time_dim ', t,'.\n',
+                                   'Maybe your matrix is not triangular ',
+                                   'as expected.\nYou can check it using ',
+                                   'plot_biadj_matrix()'))
+                }
                 break()
             }
 
@@ -121,11 +139,10 @@ fitness <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
             i <- i + 1
         }
 
-        ff <- cbind.data.frame(names(ff), ff)
-        colnames(ff) <- c(geo_dim, as.character(t))
+        ff <- cbind.data.frame(names(ff), t, ff)
+        colnames(ff) <- c(geo_dim, time_dim, "Fitness")
 
         return(list(ff, i))
-        # return(ff)
     })
 
     iterations <- sapply(RKFI, "[", 2)
@@ -135,10 +152,7 @@ fitness <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
     }
 
     RKFI <- sapply(RKFI, "[", 1)
-    names(RKFI) <- unique(data[, time_dim])
-    RKFI <- plyr::join_all(RKFI, geo_dim)
-    RKFI <- reshape2::melt(RKFI)
-    colnames(RKFI) <- c(geo_dim, time_dim, "Fitness")
+    RKFI <- do.call("rbind.data.frame", RKFI)
     if (time_dim_added) {
         RKFI <- RKFI[, c(geo_dim, "Fitness")]
     }
@@ -169,7 +183,6 @@ fitness <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
     # It seems there's some problem about the use of memory, but I don't
     #  know if it's the right way to solve the problem
     gc()
-
 
     return(RKFI)
 }
