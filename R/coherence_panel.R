@@ -73,7 +73,7 @@ coherence_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim) {
 
     # Null model (Hypergeometric distribution) ---------------
 
-    C <- .get_biadj_matrix(data, geo_dim, kng_dim)
+    C <- .get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr, 'simple')
 
     J <- t(C) %*% C
 
@@ -100,7 +100,7 @@ coherence_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim) {
     RCI <- lapply(unique(data[, time_dim]), function(t) {
         data_subset <- data[which(data[, time_dim] == t), ]
         R <- coherence(data_subset, geo_dim, kng_dim, kng_nbr,
-                       null_model = null_model, names_as_strings = TRUE)
+                       null_model, names_as_strings = TRUE)
         colnames(R) <- c(geo_dim, as.character(t))
         return(R)
     })

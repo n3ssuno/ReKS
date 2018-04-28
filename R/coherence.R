@@ -78,7 +78,7 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr,
     # Null model (Hypergeometric distribution) ---------------
 
     if (is.null(null_model)) {
-        C <- .get_biadj_matrix(data, geo_dim, kng_dim)
+        C <- .get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr, 'simple')
 
         J <- t(C) %*% C
 
@@ -107,7 +107,7 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr,
         stop('null_model must be of "reks_null_model" class')
     }
 
-    ee <- .get_biadj_matrix(data, geo_dim, kng_dim, RTA = FALSE, kng_nbr)
+    ee <- .get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr, 'simple')
 
     en <- colnames(ee)
     nc <- setdiff(colnames(null_model$t), colnames(ee))
