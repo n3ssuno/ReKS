@@ -114,7 +114,7 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
         colnames(CI) <- c(geo_dim, time_dim, "Complexity")
 
         if (scale == TRUE) {
-            CI[, 2] <- scale(CI[, 2])
+            CI[, "Complexity"] <- scale(CI[, "Complexity"])
             warning('The values of the index have been standardised.')
         }
 
