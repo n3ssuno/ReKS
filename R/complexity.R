@@ -124,7 +124,7 @@ complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
     #names(RKCI) <- unique(data[, time_dim])
     #RKCI <- plyr::join_all(RKCI, geo_dim)
     #RKCI <- reshape2::melt(RKCI)
-    RKFI <- do.call("rbind.data.frame", RKFI)
+    RKCI <- do.call("rbind.data.frame", RKCI)
     #colnames(RKCI) <- c(geo_dim, time_dim, "Complexity")
     if (time_dim_added) {
         RKCI <- RKCI[, c(geo_dim, "Complexity")]
