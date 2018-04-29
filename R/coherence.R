@@ -107,7 +107,8 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr,
         stop('null_model must be of "reks_null_model" class')
     }
 
-    ee <- .get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr, 'simple')
+    # ee <- .get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr, 'simple')
+    ee <- .get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr, 'none')
 
     en <- colnames(ee)
     nc <- setdiff(colnames(null_model$t), colnames(ee))
