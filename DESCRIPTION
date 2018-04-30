@@ -1,19 +1,19 @@
-Package: RKS
+Package: ReKS
 Type: Package
 Title: Regional Knowledge Space
-Version: 0.2.6
+Version: 0.2.9
 Authors@R: person("Carlo", "Bottai", 
     email = "carlo.bottai@unito.it", 
     role = c("aut", "cre"))
 Maintainer: Carlo Bottai <carlo.bottai@unito.it>
-Description: By the moment RKS ("rocks") provides four nice functions.
+Description: By the moment ReKS (``rex'') provides four functions.
     The first computes the entropy of a given array and implement an 
     algoritm able to decompose it into between and within group entropy 
-    (aka unrelated and related variety). The second calculates the 
-    Coherence Index. The third and the fourth yield the ECI and the 
-    Fitness/Complexity, respectively. In the future how knows?!
-URL: https://github.com/n3ssuno/RKS
-BugReports: https://github.com/n3ssuno/RKS/issues
+    (aka Unrelated and Related Variety, respectively). The second calculates 
+    the Coherence Index. The third and the fourth yield the ECI and the 
+    Fitness of a region, respectively.
+URL: https://github.com/n3ssuno/ReKS
+BugReports: https://github.com/n3ssuno/ReKS/issues
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 6.0.1

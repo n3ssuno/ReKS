@@ -13,16 +13,20 @@
 #' that reports the absolute frequency of each of the possible types/groups of
 #' observations of the database.
 #' It is also used internally by the entropy decomposition functions.
-#' See:
-#' \itemize{
-#' \item{Shannon (1948) "A Mathematical Theory of Communication", \emph{Bell
-#' System Technical Journal}, 27, 379--423;}
-#' \item{Theil (1967) \emph{Economics and Information Theory}, North-Holland;}
-#' \item{Theil (1972) \emph{Statistical Decomposition Analysis}, North-Holland;}
-#' \item{Frenken (2007) "Entropy statistics and information theory", in
+#'
+#' @references
+#' Shannon (1948) ``A Mathematical Theory of Communication'', \emph{Bell
+#' System Technical Journal}, 27, 379--423;
+#'
+#' Theil (1967) \emph{Economics and Information Theory}, North-Holland;
+#'
+#' Theil (1972) \emph{Statistical Decomposition Analysis}, North-Holland;
+#'
+#' Frenken (2007) ``Entropy Statistics and Information Theory'', in
 #' Hanusch and Pyka (Eds.) \emph{Elgar Companion to Neo-Schumpeterian
-#' Economics}, Edward Elgar.}
-#' }
+#' Economics}, Edward Elgar.
+#'
+#' @encoding UTF-8
 #'
 #' @param data Numerical vector whos elements are the numerosity of each
 #' of the types in which the observations can be categorised (absolute

@@ -5,24 +5,26 @@
 #' Regional Knowledge Fitness Index
 #'
 #' @description
+#' The function computes the Fitness (i.e. \emph{competitiveness}) of each given
+#' geographical area considered, in each year provided (see the references
+#' below for further details).
 #'
-#' @details
+#' @references
+#' Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2012)
+#' ``A New Metrics for Countries' Fitness and Products' Complexity'',
+#' \emph{Scientific Reports}, 2, 1--7;
 #'
-#' See:
-#' \itemize{
-#' \item{Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2012)
-#' "A New Metrics for Countries' Fitness and Products' Complexity",
-#' \emph{Scientific Reports}, 2, 1--7;}
-#' \item{Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2013)
-#' "Economic Complexity: Conceptual Grounding of a New Metrics for Global
-#' Competitiveness", \emph{Journal of Economic Dynamics and Control}, 37,
-#' 1683--1691;}
-#' \item{Cristelli, Gabrielli, Tacchella, Caldarelli and Pietronero (2013)
-#' "Measuring the Intangibles: A Metrics for the Economic Complexity of
-#' Countries and Products", \emph{PLOS ONE}, 8, e70726;}
-#' \item{Balland and Rigby (2017) "The Geography of Complex Knowledge",
-#' \emph{Economic Geography}, 93, 1--23.}
-#' }
+#' Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2013)
+#' ``Economic Complexity: Conceptual Grounding of a New Metrics for Global
+#' Competitiveness'', \emph{Journal of Economic Dynamics and Control}, 37,
+#' 1683--1691;
+#'
+#' Cristelli, Gabrielli, Tacchella, Caldarelli and Pietronero (2013)
+#' ``Measuring the Intangibles: A Metrics for the Economic Complexity of
+#' Countries and Products'', \emph{PLOS ONE}, 8, e70726;
+#'
+#' @encoding UTF-8
+#'
 #' @param data It is expected to be a dataframe in "long" format.
 #' @param geo_dim It is the name of the column of the data.frame that
 #' represents its geographical dimension (e.g., the different regions of

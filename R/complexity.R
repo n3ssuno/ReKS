@@ -5,21 +5,26 @@
 #' Regional Knowledge Complexity Index
 #'
 #' @description
+#' The function computes the ``Technological Complexity'' of each geographical
+#' area considered, in each given year, in line with the so called \emph{Method
+#' of Reflections} (see the references below).
 #'
-#' @details
+#' @references
+#' Hidalgo, Klinger, Barabási and Hausmann (2007) ``The Product Space
+#' Conditions the Development of Nations'', \emph{Science}, 317, 482--487;
 #'
-#' See:
-#' \itemize{
-#' \item{Hidalgo, Klinger, Barab{\'a}si and Hausmann (2007) "The Product Space
-#' Conditions the Development of Nations", \emph{Science}, 317, 482--487;}
-#' \item{Hidalgo and Hausmann (2009) "The Building Blocks of Economic
-#' Complexity", \emph{PNAS}, 106, 10570--10575;}
-#' \item{Antonelli, Crespi, Mongeau Ospina and Scellato (2017) "Knowledge
+#' Hidalgo and Hausmann (2009) ``The Building Blocks of Economic
+#' Complexity'', \emph{PNAS}, 106, 10570--10575;
+#'
+#' Antonelli, Crespi, Mongeau Ospina and Scellato (2017) ``Knowledge
 #' Composition, Jacobs Externalities and Innovation Performance in European
-#' Regions", \emph{Regional Studies}, 51, 1708--1720;}
-#' \item{Balland and Rigby (2017) "The Geography of Complex Knowledge",
-#' \emph{Economic Geography}, 93, 1--23.}
-#' }
+#' Regions'', \emph{Regional Studies}, 51, 1708--1720;
+#'
+#' Balland and Rigby (2017) ``The Geography of Complex Knowledge'',
+#' \emph{Economic Geography}, 93, 1--23.
+#'
+#' @encoding UTF-8
+#'
 #' @param data It is expected to be a dataframe in "long" format.
 #' @param geo_dim It is the name of the column of the data.frame that
 #' represents its geographical dimension (e.g., the different regions of
