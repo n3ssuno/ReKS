@@ -1,10 +1,12 @@
-# RKS
-RKS ("Regional Knowledge Space") is an R Package that computes some measure about the knowledge space of a economic region.
+# ReKS
+ReKS ("Regional Knowledge Space") is an R Package that computes some measure about the knowledge space of a economic region.
 
-Warnings: At the moment is under strong development and other functions will be added soon. Also the documentation and the relative bibligraphical references are only partial and will be fixed as soon as possible.
+Warnings: At the moment it is under strong development and other functions will be added soon. Also the documentation and the relative bibligraphical references are only partial and will be fixed as soon as possible.
 
 ## Install
-devtools::install_github("n3ssuno/RKS")
+```R
+devtools::install_github("n3ssuno/ReKS")
+```
 
 ## Author
 Carlo Bottai - carlo DOT bottai AT unito DOT it
