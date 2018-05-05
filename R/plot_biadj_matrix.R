@@ -46,7 +46,7 @@ plot_biadj_matrix <- function(data, geo_dim, kng_dim, kng_nbr,
     geo_dim <- deparse(substitute(geo_dim))
     kng_dim <- deparse(substitute(kng_dim))
     kng_nbr <- deparse(substitute(kng_nbr))
-    BM <- .get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr, binary_mode)
+    BM <- ReKS:::.get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr, binary_mode)
     plot(BM, order, ...)
 }
 
@@ -81,13 +81,13 @@ plot_biadj_matrix <- function(data, geo_dim, kng_dim, kng_nbr,
 
 plot.rks_biadj_matrix <- function(x, order = "DU", ...) {
     if (order == "DU") {
-        du <- .get_du(x)
+        du <- ReKS:::.get_du(x)
         row_order <- order(du$diversification)
         col_order <- order(du$ubiquity, decreasing = T)
     }
-    x <- x[row_order, col_order]
+    xx <- x[row_order, col_order]
     rotate <- function(m) t(apply(m, 2, rev))
-    image(rotate(x),
+    image(rotate(xx),
           col = c('white', 'black'),
           xlab = attr(x, "kng_dim"), ylab = attr(x, "geo_dim"),
           axes = FALSE, ...)

@@ -33,9 +33,15 @@
 #' Variety and Regional Economic Growth'', \emph{Regional Studies}, 41,
 #' 685--697;
 #'
+#' Boschma and Iammarino (2009) ``Related Variety, Trade Linkages, and Regional
+#' Growth in Italy'', \emph{Economic Geography}, 85, 289--311;
+#'
 #' Quatraro (2010) ``Knowledge Coherence, Variety and Economic Growth:
 #' Manufacturing Evidence from Italian Regions'', \emph{Research Policy}, 39,
 #' 1289--1302;
+#'
+#' Content and Frenken (2016) ``Related Variety and Economic Development: A
+#' Literature Review'', \emph{European Planning Studies}, 24, 2097--2112;
 #'
 #' Rocchetta and Mina (2017), ``Technological Coherence and the Adaptive
 #' Resilience of Regional Economies'', \emph{Papers in Evolutionary Economic

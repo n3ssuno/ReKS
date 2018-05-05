@@ -21,7 +21,7 @@
 #'
 #' Cristelli, Gabrielli, Tacchella, Caldarelli and Pietronero (2013)
 #' ``Measuring the Intangibles: A Metrics for the Economic Complexity of
-#' Countries and Products'', \emph{PLOS ONE}, 8, e70726;
+#' Countries and Products'', \emph{PLoS ONE}, 8, e70726;
 #'
 #' @encoding UTF-8
 #'
