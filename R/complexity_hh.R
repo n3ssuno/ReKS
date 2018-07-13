@@ -1,8 +1,8 @@
 #' @name
-#' complexity
+#' complexity_hh
 #'
 #' @title
-#' Regional Knowledge Complexity Index
+#' Regional Knowledge Complexity Index a là Hidalgo-Hausmann
 #'
 #' @description
 #' The function computes the ``Technological Complexity'' of each geographical
@@ -10,9 +10,6 @@
 #' of Reflections} (see the references below).
 #'
 #' @references
-#' Hidalgo, Klinger, Barabási and Hausmann (2007) ``The Product Space
-#' Conditions the Development of Nations'', \emph{Science}, 317, 482--487;
-#'
 #' Hidalgo and Hausmann (2009) ``The Building Blocks of Economic
 #' Complexity'', \emph{PNAS}, 106, 10570--10575;
 #'
@@ -35,9 +32,6 @@
 #' @param kng_nbr It is the name of the column of the data.frame that
 #' represents the numerosity of each knowledge class (e.g., the number of
 #' patents a region has in a given year in a given patent class).
-#' @param time_dim It is the name of the column of the data.frame that
-#' represents its temporal dimension (e.g., the different years of analysis).
-#' It is an optional parameter.
 #' @param binary_mode It is "RTA" by default. The possible values are: "simple"
 #' (if there is at least a patent in the geo. area in the particular tech. class
 #' it is 1, and 0 otherwise); "RTA" or "RCA" (Balassa method);
@@ -51,102 +45,82 @@
 #' have the triangular structure observed in the trade data.
 #' @param scale It is TRUE by default. Otherwise, the Complexity Index is not
 #' standardised (CI - mean[CI] / sd[CI]).
+#' @param names_as_strings If TRUE the function assumes you have written the
+#' name of the columns above said as strings, otherwise they are assumed to
+#' be symbols. Default is FALSE.
 #' @return A data.frame with the Complexity Index of each geographical area
 #' in each time step of analysis.
 #' @examples
 #' RKCI <- complexity(data = df, time_dim = year, geo_dim = NUTS2,
 #' kng_dim = IPC.3dig, kng_nbr = N.patents)
 
-complexity <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
-                       binary_mode = "RTA", scale = TRUE) {
+complexity_hh <- function(data, geo_dim, kng_dim, kng_nbr,
+                       binary_mode = "RTA", scale = TRUE,
+                       names_as_strings = FALSE) {
     # if (!requireNamespace("reshape2", quietly = TRUE)) {
     #     stop(paste0("Package \"reshape2\" needed for this function to work. ",
     #                 "Please install it."), call. = FALSE)
     # }
 
-    .Deprecated("complexity_hh_panel", package = "ReKS")
-
     data <- as.data.frame(data)
 
-    time_dim <- deparse(substitute(time_dim))
-    geo_dim <- deparse(substitute(geo_dim))
-    kng_dim <- deparse(substitute(kng_dim))
-    kng_nbr <- deparse(substitute(kng_nbr))
-
-    time_dim_added <- FALSE
-    if (time_dim == "NULL") {
-        data$AddedTimeDim <- 1
-        time_dim <- "AddedTimeDim"
-        time_dim_added <- TRUE
+    if (names_as_strings == FALSE) {
+        geo_dim <- deparse(substitute(geo_dim))
+        kng_dim <- deparse(substitute(kng_dim))
+        kng_nbr <- deparse(substitute(kng_nbr))
     }
 
-    data <- data[complete.cases(data[, c(time_dim, geo_dim,
-                                         kng_dim, kng_nbr)]), ]
+    data <- data[complete.cases(data[, c(geo_dim, kng_dim, kng_nbr)]), ]
 
-    RKCI <- lapply(unique(data[, time_dim]), function(t) {
-        data_subset <- data[which(data[, time_dim] == t), ]
-        mm <- .get_biadj_matrix(data_subset, geo_dim, kng_dim, kng_nbr,
+    mm <- .get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr,
                                 binary_mode)
 
-        if (any(rowSums(mm) == 0)) {
-            mm <- mm[-which(rowSums(mm) == 0), ]
-        }
-        if (any(colSums(mm) == 0)) {
-            mm <- mm[, -which(colSums(mm) == 0)]
-        }
-
-        du <- .get_du(mm)
-
-        mm_tilde <- t(t(mm) / du$ubiquity) %*% t(mm)
-        mm_tilde <- mm_tilde / du$diversification
-
-        if (!all(round(rowSums(mm_tilde)) == 1)) {
-            stop(paste("The matrix is not row-stochastic.\n",
-                 "It is not possible to compute the measure."))
-        }
-        if (round(Re(as.complex(eigen(mm_tilde)$value[1]))) != 1) {
-            stop(paste("The first eigen-value is different from 1.",
-                       "It is not possible to compute the measure."))
-        }
-
-        CI <- eigen(mm_tilde)$vectors
-        if (dim(CI)[2] >= 2) {
-            CI <- CI[, 2]
-            CI <- Re(as.complex(CI))
-
-            if (cor(CI, du$diversification,
-                    use = "pairwise.complete.obs", method = "spearman") < 0) {
-                CI <- -CI
-            }
-        } else {
-            CI <- NA
-        }
-
-        CI <- cbind.data.frame(rownames(mm_tilde), t, CI)
-        colnames(CI) <- c(geo_dim, time_dim, "Complexity")
-
-        if (scale == TRUE) {
-            CI[, "Complexity"] <- scale(CI[, "Complexity"])
-            warning('The values of the index have been standardised.')
-        }
-
-        return(CI)
-    })
-
-    #names(RKCI) <- unique(data[, time_dim])
-    #RKCI <- plyr::join_all(RKCI, geo_dim)
-    #RKCI <- reshape2::melt(RKCI)
-    RKCI <- do.call("rbind.data.frame", RKCI)
-    #colnames(RKCI) <- c(geo_dim, time_dim, "Complexity")
-    if (time_dim_added) {
-        RKCI <- RKCI[, c(geo_dim, "Complexity")]
+    if (any(rowSums(mm) == 0)) {
+        mm <- mm[-which(rowSums(mm) == 0), ]
+    }
+    if (any(colSums(mm) == 0)) {
+        mm <- mm[, -which(colSums(mm) == 0)]
     }
 
+    du <- .get_du(mm)
+
+    mm_tilde <- t(t(mm) / du$ubiquity) %*% t(mm)
+    mm_tilde <- mm_tilde / du$diversification
+
+    if (!all(round(rowSums(mm_tilde)) == 1)) {
+        stop(paste("The matrix is not row-stochastic.\n",
+                   "It is not possible to compute the measure."))
+    }
+    if (round(Re(as.complex(eigen(mm_tilde)$value[1]))) != 1) {
+        stop(paste("The first eigen-value is different from 1.",
+                   "It is not possible to compute the measure."))
+    }
+
+    RKCI <- eigen(mm_tilde)$vectors
+    if (dim(RKCI)[2] >= 2) {
+        RKCI <- RKCI[, 2]
+        RKCI <- Re(as.complex(RKCI))
+
+        if (cor(RKCI, du$diversification,
+                use = "pairwise.complete.obs", method = "spearman") < 0) {
+            RKCI <- -RKCI
+        }
+    } else {
+        RKCI <- NA
+    }
+
+    RKCI <- cbind.data.frame(rownames(mm_tilde), RKCI)
+    colnames(RKCI) <- c(geo_dim, "Complexity")
+
+    if (scale == TRUE) {
+        RKCI[, "Complexity"] <- scale(RKCI[, "Complexity"])
+        warning('The values of the index have been standardised.')
+    }
+
+
     class(RKCI) <- c('data.frame', 'reks_hh_complexity')
-    # TODO
-    # In that way it returns only the last year
-    # attr(RKCI, 'diversification') <- du$diversification
-    # attr(RKCI, 'ubiquity') <- du$ubiquity
+    attr(RKCI, 'diversification') <- du$diversification
+    attr(RKCI, 'ubiquity') <- du$ubiquity
     attr(RKCI, 'standardised') <- ifelse(scale == TRUE, TRUE, FALSE)
     if (binary_mode == 'RTA') {
         attr(RKCI, "binary_mode") <- 'RTA'

@@ -1,17 +1,19 @@
 Package: ReKS
 Type: Package
 Title: Regional Knowledge Space
-Version: 0.2.9
+Version: 0.3.0
 Authors@R: person("Carlo", "Bottai", 
     email = "carlo.bottai@unito.it", 
     role = c("aut", "cre"))
 Maintainer: Carlo Bottai <carlo.bottai@unito.it>
-Description: By the moment ReKS (``rex'') provides four functions.
+Description: By the moment ReKS (``rex'') provides six main functions.
     The first computes the entropy of a given array and implement an 
     algoritm able to decompose it into between and within group entropy 
     (aka Unrelated and Related Variety, respectively). The second calculates 
     the Coherence Index. The third and the fourth yield the ECI and the 
-    Fitness of a region, respectively.
+    Fitness of a region, respectively. The last two provides two proximity
+    measures between the different regional knowledge pieces. The other 
+    functions provided help to plot the outcome of these last.
 URL: https://github.com/n3ssuno/ReKS
 BugReports: https://github.com/n3ssuno/ReKS/issues
 License: GPL-3 + file LICENSE
@@ -20,4 +22,5 @@ RoxygenNote: 6.0.1
 LazyData: true
 Imports:
     reshape2,
-    plyr
+    plyr,
+    igraph

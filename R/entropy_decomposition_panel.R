@@ -103,7 +103,7 @@ entropy_decomposition_panel <- function(data, kng_nbr, kng_dim_upper,
 
     obs_list <- 1:length(dd)
     entropy_total <- sapply(obs_list,
-                              function(x) RKS::entropy(dd[[x]]))
+                              function(x) entropy(dd[[x]]))
     entropy_total <- cbind.data.frame(ddnt, ddng, entropy_total)
     colnames(entropy_total) <- c(time_dim, geo_dim, "entropy.total")
 
@@ -111,7 +111,7 @@ entropy_decomposition_panel <- function(data, kng_nbr, kng_dim_upper,
                   list(data[, time_dim], data[, geo_dim]))
     entropy_decomposed <- sapply(obs_list,
                                  function(x)
-                                     RKS::entropy_decomposition(dd[[x]],
+                                     entropy_decomposition(dd[[x]],
                                                                 grps[[x]]))
     entropy_decomposed <- matrix(unlist(entropy_decomposed[1:2,]),
                                  ncol = 2, byrow = T)

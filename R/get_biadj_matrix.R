@@ -20,6 +20,11 @@
 
     # Preliminary controls ---------------
 
+    if (!requireNamespace("reshape2", quietly = TRUE)) {
+        stop(paste0("Package \"reshape2\" needed for this function to work. ",
+                    "Please install it."), call. = FALSE)
+    }
+
     data <- as.data.frame(data)
 
     # Main function ---------------

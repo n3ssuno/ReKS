@@ -1,8 +1,9 @@
 #' @name
-#' fitness
+#' fitness_tccgp_panel
 #'
 #' @title
-#' Regional Knowledge Fitness Index
+#' Regional Knowledge Fitness Index a là Tacchella, Cristelli,
+#' Caldarelli, Gabrielli and Pietronero, for panel data
 #'
 #' @description
 #' The function computes the Fitness (i.e. \emph{competitiveness}) of each given
@@ -55,14 +56,12 @@
 #' RKFI <- fitness(data = df, time_dim = year, geo_dim = NUTS2,
 #' kng_dim = IPC.3dig, kng_nbr = N.patents)
 
-fitness <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
+fitness_tccgp_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
                     binary_mode = "RTA") {
     # if (!requireNamespace("reshape2", quietly = TRUE)) {
     #     stop(paste0("Package \"reshape2\" needed for this function to work. ",
     #                 "Please install it."), call. = FALSE)
     # }
-
-    .Deprecated("fitness_tccgp_panel", package = "ReKS")
 
     data <- as.data.frame(data)
 
@@ -71,102 +70,59 @@ fitness <- function(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
     kng_dim <- deparse(substitute(kng_dim))
     kng_nbr <- deparse(substitute(kng_nbr))
 
-    time_dim_added <- FALSE
-    if (time_dim == "NULL") {
-        data$AddedTimeDim <- 1
-        time_dim <- "AddedTimeDim"
-        time_dim_added <- TRUE
-    }
-
     data <- data[complete.cases(data[, c(time_dim, geo_dim,
                                          kng_dim, kng_nbr)]), ]
 
-    RKFI <- lapply(unique(data[, time_dim]), function(t) {
+    time_span <- unique(data[, time_dim])
+    RKFI <- lapply(time_span, function(t) {
         data_subset <- data[which(data[, time_dim] == t), ]
-        mm <- .get_biadj_matrix(data_subset, geo_dim, kng_dim, kng_nbr,
-                                binary_mode)
 
-        if (any(rowSums(mm) == 0)) {
-            mm <- mm[-which(rowSums(mm) == 0), ]
-        }
-        if (any(colSums(mm) == 0)) {
-            mm <- mm[, -which(colSums(mm) == 0)]
-        }
+        FI <- fitness_tccgp(data_subset, geo_dim, kng_dim, kng_nbr,
+                            binary_mode, names_as_strings = TRUE)
 
-        ff <- rep(1, nrow(mm))
-        cc <- rep(1, ncol(mm))
-        i <- 0
-        while (TRUE) {
-            ff1 <- rowSums(t(t(mm) * cc))
-            cc1 <- 1 / rowSums(t(mm) / ff)
+        iterations <- attr(FI, "iterations")
+        convergence <- attr(FI, "convergence")
 
-            # Normalisation needed to avoid possible divergences
-            #  due to the hyperbolic nature of the second equation
-            ff1 <- ff1 / mean(ff1)
-            cc1 <- cc1 / mean(cc1)
+        diversification <- attr(FI, 'diversification')
+        diversification <- cbind(geo_dim = names(diversification),
+                                 time_dim = t,
+                                 diversification)
+        ubiquity <- attr(FI, 'ubiquity')
+        ubiquity <- cbind(kng_dim = names(ubiquity),
+                          time_dim = t,
+                          ubiquity)
 
-            # TODO
-            # This is an arbitrary choice of mine and it is not in the
-            #  original papers. Maybe it could be better and closer to the
-            #  original sources to use 20 recursions. Another thing to check
-            #  and decide is what happens in the function if the algorithm
-            #  does not converge
-            if (all((ff - ff1) < 0.0000000001) &
-                all((cc - cc1) < 0.0000000001)) {
-                ff <- ff1
-                cc <- cc1
-                break()
-            }
-            if (i >= 200) {
-                ff <- rep(as.numeric(NA), nrow(mm))
-                cc <- rep(as.numeric(NA), ncol(mm))
-                names(ff) <- names(ff1)
-                names(cc) <- names(cc1)
-                if (time_dim_added) {
-                    warning(paste0('The algorithm failed to converge.\n',
-                                   'Maybe your matrix is not triangular ',
-                                   'as expected.\nYou can check it using ',
-                                   'plot_biadj_matrix()'))
-                } else {
-                    warning(paste0('The algorithm failed to converge ',
-                                   'for the time_dim ', t,'.\n',
-                                   'Maybe your matrix is not triangular ',
-                                   'as expected.\nYou can check it using ',
-                                   'plot_biadj_matrix()'))
-                }
-                break()
-            }
+        FI <- cbind.data.frame(FI, t)
+        FI <- FI[, c(1, 3, 2)]
+        colnames(FI) <- c(geo_dim, time_dim, "Fitness")
 
-            ff <- ff1
-            cc <- cc1
-
-            i <- i + 1
-        }
-
-        ff <- cbind.data.frame(names(ff), t, ff)
-        colnames(ff) <- c(geo_dim, time_dim, "Fitness")
-
-        return(list(ff, i))
+        return(list(FI,
+                    iterations, convergence,
+                    diversification, ubiquity))
     })
 
     iterations <- sapply(RKFI, "[", 2)
-    iterations <- unlist(iterations)
-    if (!time_dim_added) {
-        names(iterations) <- unique(data[, time_dim])
-    }
+    names(iterations) <- time_span
+    iterations <- do.call("rbind", iterations)
+
+    convergence <- sapply(RKFI, "[", 3)
+    names(convergence) <- time_span
+    convergence <- do.call("rbind", convergence)
+
+    diversification <- sapply(RKFI, "[", 4)
+    diversification <- do.call("rbind.data.frame", diversification)
+
+    ubiquity <- sapply(RKFI, "[", 5)
+    ubiquity <- do.call("rbind.data.frame", ubiquity)
 
     RKFI <- sapply(RKFI, "[", 1)
     RKFI <- do.call("rbind.data.frame", RKFI)
-    if (time_dim_added) {
-        RKFI <- RKFI[, c(geo_dim, "Fitness")]
-    }
 
-    class(RKFI) <- c('data.frame', 'reks_fitness')
-    # TODO
-    # In that way it returns only the last year
-    # attr(RKFI, 'diversification') <- du$diversification
-    # attr(RKFI, 'ubiquity') <- du$ubiquity
+    class(RKFI) <- c('data.frame', 'reks_fitness_tccgp')
+    attr(RKFI, 'diversification') <- diversification
+    attr(RKFI, 'ubiquity') <- ubiquity
     attr(RKFI, "iterations") <- iterations
+    attr(RKFI, "convergence") <- convergence
     if (binary_mode == 'RTA') {
         attr(RKFI, "binary_mode") <- 'RTA'
     }

@@ -59,9 +59,9 @@
 
 entropy_decomposition <- function(data, groups) {
     Pg <- by(.get_freqs(data), groups, sum)
-    BG <- RKS::entropy(Pg)
-    WG <- RKS::entropy(data) - BG
-    by_group <- log2(Pg) + 1/Pg * by(data, groups, RKS::entropy)
+    BG <- entropy(Pg)
+    WG <- entropy(data) - BG
+    by_group <- log2(Pg) + 1/Pg * by(data, groups, entropy)
     etp_dcp <- list(BG = BG,
                     WG = WG,
                     by_group = by_group,
