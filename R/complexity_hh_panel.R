@@ -98,10 +98,10 @@ complexity_hh_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
                     diversification, ubiquity))
     })
 
-    diversification <- sapply(RKFI, "[", 4)
+    diversification <- sapply(RKCI, "[", 4)
     diversification <- do.call("rbind.data.frame", diversification)
 
-    ubiquity <- sapply(RKFI, "[", 5)
+    ubiquity <- sapply(RKCI, "[", 5)
     ubiquity <- do.call("rbind.data.frame", ubiquity)
 
     RKCI <- sapply(RKCI, "[", 1)
