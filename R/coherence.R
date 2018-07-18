@@ -146,7 +146,7 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr,
     class(R) <- c("reks_coherence", "data.frame")
     attr(R, 'geo_dim') <- geo_dim
     attr(R, 'kng_dim') <- kng_dim
-    attr(RCI, 'measure') <- measure
+    attr(R, 'measure') <- measure
     attr(R, 'null_model') <- null_model
 
     return(R)
