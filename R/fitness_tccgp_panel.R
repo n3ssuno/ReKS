@@ -73,6 +73,8 @@ fitness_tccgp_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
     data <- data[complete.cases(data[, c(time_dim, geo_dim,
                                          kng_dim, kng_nbr)]), ]
 
+    measure <- "Fitness"
+
     time_span <- unique(data[, time_dim])
     RKFI <- lapply(time_span, function(t) {
         data_subset <- data[which(data[, time_dim] == t), ]
@@ -94,7 +96,6 @@ fitness_tccgp_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
 
         FI <- cbind.data.frame(FI, t)
         FI <- FI[, c(1, 3, 2)]
-        measure <- "Fitness"
         colnames(FI) <- c(geo_dim, time_dim, measure)
 
         return(list(FI,

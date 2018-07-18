@@ -72,6 +72,8 @@ complexity_hh_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
     data <- data[complete.cases(data[, c(time_dim, geo_dim,
                                          kng_dim, kng_nbr)]), ]
 
+    measure <- "Complexity"
+
     time_span <- unique(data[, time_dim])
     RKCI <- lapply(time_span, function(t) {
         data_subset <- data[which(data[, time_dim] == t), ]
@@ -91,7 +93,6 @@ complexity_hh_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
 
         CI <- cbind.data.frame(CI, t)
         CI <- CI[, c(1, 3, 2)]
-        measure <- "Complexity"
         colnames(CI) <- c(geo_dim, time_dim, measure)
 
         return(list(CI,
