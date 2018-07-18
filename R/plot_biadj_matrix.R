@@ -54,7 +54,7 @@ plot_biadj_matrix <- function(data, geo_dim, kng_dim, kng_nbr,
 # https://www.r-bloggers.com/creating-an-image-of-a-matrix-in-r-using-image/
 
 #' @name
-#' plot.rks_biadj_matrix
+#' plot.reks_biadj_matrix
 #'
 #' @title
 #' Plot a biadjacency matrix
@@ -79,7 +79,7 @@ plot_biadj_matrix <- function(data, geo_dim, kng_dim, kng_nbr,
 #'
 #' @export
 
-plot.rks_biadj_matrix <- function(x, order = "DU", ...) {
+plot.reks_biadj_matrix <- function(x, order = "DU", ...) {
     if (order == "DU") {
         du <- .get_du(x)
         row_order <- order(du$diversification)

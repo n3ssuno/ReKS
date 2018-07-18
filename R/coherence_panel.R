@@ -118,7 +118,15 @@ coherence_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim) {
 
     RCI <- plyr::join_all(RCI, geo_dim)
     RCI <- reshape2::melt(RCI)
-    colnames(RCI) <- c(geo_dim, time_dim, "Coherence")
+    measure <- "Coherence"
+    colnames(RCI) <- c(geo_dim, time_dim, measure)
+
+    class(RCI) <- c("reks_coherence", "data.frame")
+    attr(RCI, 'geo_dim') <- geo_dim
+    attr(RCI, 'kng_dim') <- kng_dim
+    attr(RCI, 'null_model') <- null_model
+    attr(RCI, 'measure') <- measure
+    attr(RCI, 'time_dim') <- time_dim
 
     return(RCI)
 }

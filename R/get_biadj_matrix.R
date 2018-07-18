@@ -82,7 +82,7 @@
         colnames(BM) <- knames
     }
 
-    class(BM) <- c('matrix', 'rks_biadj_matrix')
+    class(BM) <- c('reks_biadj_matrix', 'matrix')
     attr(BM, "geo_dim") <- geo_dim
     attr(BM, "kng_dim") <- kng_dim
     attr(BM, "binary")  <- ifelse(binary_mode == "none", FALSE, TRUE)

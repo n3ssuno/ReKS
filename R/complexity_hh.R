@@ -55,8 +55,8 @@
 #' kng_dim = IPC.3dig, kng_nbr = N.patents)
 
 complexity_hh <- function(data, geo_dim, kng_dim, kng_nbr,
-                       binary_mode = "RTA", scale = TRUE,
-                       names_as_strings = FALSE) {
+                          binary_mode = "RTA", scale = TRUE,
+                          names_as_strings = FALSE) {
     # if (!requireNamespace("reshape2", quietly = TRUE)) {
     #     stop(paste0("Package \"reshape2\" needed for this function to work. ",
     #                 "Please install it."), call. = FALSE)
@@ -110,10 +110,11 @@ complexity_hh <- function(data, geo_dim, kng_dim, kng_nbr,
     }
 
     RKCI <- cbind.data.frame(rownames(mm_tilde), RKCI)
-    colnames(RKCI) <- c(geo_dim, "Complexity")
+    measure <- "Complexity"
+    colnames(RKCI) <- c(geo_dim, measure)
 
     if (scale == TRUE) {
-        RKCI[, "Complexity"] <- scale(RKCI[, "Complexity"])
+        RKCI[, measure] <- scale(RKCI[, measure])
         warning('The values of the index have been standardised.')
     }
 
@@ -137,6 +138,9 @@ complexity_hh <- function(data, geo_dim, kng_dim, kng_nbr,
     if (binary_mode == "higher_quartiles_kng") {
         attr(RKCI, "binary_mode") <- 'higher_quartiles_kng'
     }
+    attr(RKCI, 'geo_dim') <- geo_dim
+    attr(RKCI, 'kng_dim') <- kng_dim
+    attr(RKCI, 'measure') <- measure
 
     return(RKCI)
 }

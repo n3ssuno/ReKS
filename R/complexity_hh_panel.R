@@ -56,7 +56,7 @@
 #' kng_dim = IPC.3dig, kng_nbr = N.patents)
 
 complexity_hh_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
-                       binary_mode = "RTA", scale = TRUE) {
+                                binary_mode = "RTA", scale = TRUE) {
     # if (!requireNamespace("reshape2", quietly = TRUE)) {
     #     stop(paste0("Package \"reshape2\" needed for this function to work. ",
     #                 "Please install it."), call. = FALSE)
@@ -91,7 +91,8 @@ complexity_hh_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
 
         CI <- cbind.data.frame(CI, t)
         CI <- CI[, c(1, 3, 2)]
-        colnames(CI) <- c(geo_dim, time_dim, "Complexity")
+        measure <- "Complexity"
+        colnames(CI) <- c(geo_dim, time_dim, measure)
 
         return(list(CI,
                     diversification, ubiquity))
@@ -108,7 +109,7 @@ complexity_hh_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
     #RKCI <- plyr::join_all(RKCI, geo_dim)
     #RKCI <- reshape2::melt(RKCI)
     RKCI <- do.call("rbind.data.frame", RKCI)
-    #colnames(RKCI) <- c(geo_dim, time_dim, "Complexity")
+    #colnames(RKCI) <- c(geo_dim, time_dim, measure)
 
     class(RKCI) <- c('data.frame', 'reks_hh_complexity')
     attr(RKCI, 'diversification') <- diversification
@@ -129,6 +130,10 @@ complexity_hh_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
     if (binary_mode == "higher_quartiles_kng") {
         attr(RKCI, "binary_mode") <- 'higher_quartiles_kng'
     }
+    attr(RKCI, 'geo_dim') <- geo_dim
+    attr(RKCI, 'kng_dim') <- kng_dim
+    attr(RKCI, 'time_dim') <- time_dim
+    attr(RKCI, 'measure') <- measure
 
     return(RKCI)
 }

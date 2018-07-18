@@ -132,7 +132,8 @@ fitness_tccgp <- function(data, geo_dim, kng_dim, kng_nbr,
     }
 
     RKFI <- cbind.data.frame(names(RKFI), RKFI)
-    colnames(RKFI) <- c(geo_dim, "Fitness")
+    measure <- "Fitness"
+    colnames(RKFI) <- c(geo_dim, measure)
 
     class(RKFI) <- c('data.frame', 'reks_fitness_tccgp')
     attr(RKFI, 'diversification') <- du$diversification
@@ -154,6 +155,9 @@ fitness_tccgp <- function(data, geo_dim, kng_dim, kng_nbr,
     if (binary_mode == "higher_quartiles_kng") {
         attr(RKFI, "binary_mode") <- 'higher_quartiles_kng'
     }
+    attr(RKFI, 'geo_dim') <- geo_dim
+    attr(RKFI, 'kng_dim') <- kng_dim
+    attr(RKFI, 'measure') <- measure
 
     # TODO
     # It seems there's some problem about the use of memory, but I don't

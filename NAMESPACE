@@ -1,6 +1,6 @@
 exportPattern("^[^\\.]")
 # exportPattern("^[[:alpha:]]+")
-S3method(plot, rks_biadj_matrix)
+# S3method(plot, rks_biadj_matrix)
 
 importFrom("stats", "complete.cases", "formula", "cor", "quantile")
 importFrom("graphics", "plot", "image", "box")

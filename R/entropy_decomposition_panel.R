@@ -120,6 +120,17 @@ entropy_decomposition_panel <- function(data, kng_nbr, kng_dim_upper,
                                       "entropy.between", "entropy.within")
 
     entropy <- merge(entropy_total, entropy_decomposed)
+    tl <- levels(entropy[, time_dim])
+    tn <- entropy[, time_dim]
+    entropy[, time_dim] <- as.numeric(tl)[tn]
+
+    measure <- c("entropy.total", "entropy.between", "entropy.within")
+
+    class(entropy) <- c("reks_entropy", "data.frame")
+    attr(entropy, 'geo_dim') <- geo_dim
+    attr(entropy, 'kng_dim_upper') <- kng_dim_upper
+    attr(entropy, 'time_dim') <- time_dim
+    attr(entropy, 'measure') <- measure
 
     return(entropy)
 }

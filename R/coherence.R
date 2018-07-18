@@ -140,7 +140,14 @@ coherence <- function(data, geo_dim, kng_dim, kng_nbr,
     R[is.nan(R)] <- 0
     R <- as.data.frame(R)
     R <- cbind(rownames(R), R)
-    colnames(R) <- c(geo_dim, "Coherence")
+    measure <- "Coherence"
+    colnames(R) <- c(geo_dim, measure)
+
+    class(R) <- c("reks_coherence", "data.frame")
+    attr(R, 'geo_dim') <- geo_dim
+    attr(R, 'kng_dim') <- kng_dim
+    attr(RCI, 'measure') <- measure
+    attr(R, 'null_model') <- null_model
 
     return(R)
 }

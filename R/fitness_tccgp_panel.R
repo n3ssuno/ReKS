@@ -94,7 +94,8 @@ fitness_tccgp_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
 
         FI <- cbind.data.frame(FI, t)
         FI <- FI[, c(1, 3, 2)]
-        colnames(FI) <- c(geo_dim, time_dim, "Fitness")
+        measure <- "Fitness"
+        colnames(FI) <- c(geo_dim, time_dim, measure)
 
         return(list(FI,
                     iterations, convergence,
@@ -138,6 +139,10 @@ fitness_tccgp_panel <- function(data, geo_dim, kng_dim, kng_nbr, time_dim,
     if (binary_mode == "higher_quartiles_kng") {
         attr(RKFI, "binary_mode") <- 'higher_quartiles_kng'
     }
+    attr(RKFI, 'geo_dim') <- geo_dim
+    attr(RKFI, 'kng_dim') <- kng_dim
+    attr(RKFI, 'time_dim') <- time_dim
+    attr(RKFI, 'measure') <- measure
 
     # TODO
     # It seems there's some problem about the use of memory, but I don't

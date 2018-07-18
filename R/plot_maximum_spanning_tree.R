@@ -1,4 +1,11 @@
-#' @name plot.maximum_spanning_tree
+plot_maximum_spanning_tree <- function(phi_df,
+                                       time_laps = NULL, min_thrashold = NULL,
+                                       ...) {
+    max_span_tree <- .maximum_spanning_tree(phi_df, time_laps, min_thrashold)
+    plot(max_span_tree, ...)
+}
+
+#' @name plot.reks_maximum_spanning_tree
 #'
 #' @title Plot the Maximum Spanning Tree of a proximity matrix
 #'
@@ -22,17 +29,13 @@
 #'
 #' @export
 
-plot.maximum_spanning_tree <- function(phi_df,
-                                       time_laps = NULL, min_thrashold = NULL,
-                                       ...) {
+plot.reks_maximum_spanning_tree <- function(mst, ...) {
     if (!requireNamespace("igraph", quietly = TRUE)) {
         stop(paste0("Package \"igraph\" needed for this function to work. ",
                     "Please install it."), call. = FALSE)
     }
 
-    max_span_tree <- .maximum_spanning_tree(phi_df, time_laps, min_thrashold)
-
-    igraph::plot.igraph(max_span_tree, ...)
+    igraph::plot.igraph(mst, ...)
 }
 # vertex.label.cex = .5, vertex.size = .05
 
@@ -112,6 +115,8 @@ plot.maximum_spanning_tree <- function(phi_df,
         max_span_tree <- as.undirected(max_span_tree)
         max_span_tree <- union(max_span_tree, min_thd_graph)
     }
+
+    class(max_span_tree) <- c("igraph", "reks_maximum_spanning_tree")
 
     return(max_span_tree)
 
