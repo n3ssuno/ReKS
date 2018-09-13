@@ -34,8 +34,8 @@
 #' @param ... Other parameters taken by plot.
 #' @return Nothing
 
-plot_biadj_matrix <- function(data, geo_dim, kng_dim, kng_nbr,
-                              binary_mode, order = "DU", ...) {
+plot_biadjacency_matrix <- function(data, geo_dim, kng_dim, kng_nbr,
+                                    binary_mode, order = "DU", ...) {
     # Order can be
     # - "DU" = diversification - ubiquity
     # - "FC" = fitness - complexity
@@ -47,7 +47,7 @@ plot_biadj_matrix <- function(data, geo_dim, kng_dim, kng_nbr,
     kng_dim <- deparse(substitute(kng_dim))
     kng_nbr <- deparse(substitute(kng_nbr))
     BM <- .get_biadj_matrix(data, geo_dim, kng_dim, kng_nbr, binary_mode)
-    plot(BM, order, ...)
+    image_biadjacency_matrix(BM, order, ...)
 }
 
 
@@ -79,18 +79,20 @@ plot_biadj_matrix <- function(data, geo_dim, kng_dim, kng_nbr,
 #'
 #' @export
 
-plot.reks_biadj_matrix <- function(x, order = "DU", ...) {
+image_biadjacency_matrix <- function(x, order = "DU", ...) {
     if (order == "DU") {
         du <- .get_du(x)
         row_order <- order(du$diversification)
         col_order <- order(du$ubiquity, decreasing = T)
     }
     xx <- x[row_order, col_order]
-    rotate <- function(m) t(apply(m, 2, rev))
-    image(rotate(xx),
-          col = c('white', 'black'),
+    # rotate <- function(m) t(apply(m, 2, rev))
+    # xx <- rotate(xx)
+    Matrix::image(xx,
+          # col = c('white', 'black'),
           xlab = attr(x, "kng_dim"), ylab = attr(x, "geo_dim"),
-          axes = FALSE, ...)
-    box()
-    invisible()
+          # axes = FALSE,
+          ...)
+    # box()
+    # invisible()
 }
