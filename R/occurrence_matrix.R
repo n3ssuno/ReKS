@@ -81,7 +81,7 @@ occurrence_matrix <- function(data, geo_dim, kng_dim,
         data <- unique(data[, c(geo_dim, kng_dim, time_dim)])
     } else {
         if (is.null(time_dim)) {
-            if (any(duplicated(data[, c(geo_dim, kng_dim)]))) {
+            if (anyDuplicated(data[, c(geo_dim, kng_dim)])) {
                 frml <- formula(paste(kng_nbr, "~",
                                       geo_dim, "+", kng_dim))
                 data <- aggregate(formula = frml, data = data, FUN = sum)
@@ -91,7 +91,7 @@ occurrence_matrix <- function(data, geo_dim, kng_dim,
                         call. = F)
             }
         } else {
-            if (any(duplicated(data[, c(geo_dim, kng_dim, time_dim)]))) {
+            if (anyDuplicated(data[, c(geo_dim, kng_dim, time_dim)])) {
                 frml <- formula(paste(kng_nbr, "~",
                                       geo_dim, "+", kng_dim, "+", time_dim))
                 data <- aggregate(formula = frml, data = data, FUN = sum)
@@ -108,8 +108,11 @@ occurrence_matrix <- function(data, geo_dim, kng_dim,
                     data = data,
                     sparse = TRUE)
 
-        if (binary_mode == 'RTA' | binary_mode == 'RCA')
-            bm <- rta(bm, binary = TRUE)
+        bm <- switch(binary_mode,
+                     RTA = rta(bm, binary = TRUE),
+                     RCA = rta(bm, binary = TRUE),
+                     simple = as(bm, "ngCMatrix"),
+                     none = bm)
 
         return(bm)
     }

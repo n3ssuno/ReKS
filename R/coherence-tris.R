@@ -64,9 +64,9 @@ coherence <- function(occurrence_mtx, relatedness_mtx) {
 
         # Preliminary operations, checks and transformations ---------------
 
+        oc_mtx_names <- colnames(occurrence_mtx)
+        rl_mtx_names <- colnames(relatedness_mtx)
         if (dim(occurrence_mtx)[[2]] != sum(dim(relatedness_mtx)) / 2) {
-            oc_mtx_names <- colnames(occurrence_mtx)
-            rl_mtx_names <- colnames(relatedness_mtx)
             names_tbr <- setdiff(rl_mtx_names, oc_mtx_names)
             relatedness_mtx <- relatedness_mtx[
                 -which(rownames(relatedness_mtx) %in% names_tbr),
