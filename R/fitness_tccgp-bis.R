@@ -92,12 +92,13 @@ fitness_tccgp <- function(occurrence_mtx,
         du <- ReKS:::.get_du(Matrix::as.matrix(occurrence_mtx))
         #TODO
 
-        RKFI <- rep(1, nrow(occurrence_mtx))
-        RKCI <- rep(1, ncol(occurrence_mtx))
+        RKFI <- as(rep(1, nrow(occurrence_mtx)), "sparseVector")
+        RKCI <- as(rep(1, ncol(occurrence_mtx)), "sparseVector")
         i <- 0
         while (TRUE) {
-            RKFI1 <- rowSums(t(t(occurrence_mtx) * RKCI))
-            RKCI1 <- 1 / rowSums(t(occurrence_mtx) / RKFI)
+            RKFI1 <- Matrix::t(occurrence_mtx) * RKCI
+            RKFI1 <- Matrix::rowSums(Matrix::t(RKFI1))
+            RKCI1 <- 1 / Matrix::rowSums(Matrix::t(occurrence_mtx / RKFI))
 
             # Normalisation needed to avoid possible divergences
             #  due to the hyperbolic nature of the second equation
@@ -150,18 +151,65 @@ fitness_tccgp <- function(occurrence_mtx,
         #  know if it's the right way to solve the problem
         gc()
 
+        attr(RKFI, "iterations") <- i
+        attr(RKFI, "convergence") <- convergence
+
+        attr(RKFI, 'diversification') <- du$diversification
+        attr(RKFI, 'ubiquity') <- du$ubiquity
+
         return(RKFI)
     }
 
     fitness_tccgp_panel <- function(occurrence_mtx) {
         time_span <- names(occurrence_mtx)
         RKFI <- lapply(as.character(time_span),
-                       function(y) fitness_tccgp_crossSection(occurrence_mtx[[y]]))
+                       function(y) {
+                           Fx <- fitness_tccgp_crossSection(occurrence_mtx[[y]])
+
+                           iterations <- attr(Fx, "iterations")
+                           convergence <- attr(Fx, "convergence")
+
+                           # diversification <- attr(Fx, 'diversification')
+                           # diversification <-
+                           #     cbind.data.frame(geo_dim = names(diversification),
+                           #                      time_dim = y,
+                           #                      diversification)
+                           # ubiquity <- attr(Fx, 'ubiquity')
+                           # ubiquity <-
+                           #     cbind.data.frame(kng_dim = names(ubiquity),
+                           #                      time_dim = y,
+                           #                      ubiquity)
+
+                           return(list(Fx,
+                                       iterations, convergence))
+                                       # diversification, ubiquity))
+                       })
+
+        iterations <- sapply(RKFI, "[", 2)
+        names(iterations) <- time_span
+        iterations <- do.call("rbind", iterations)
+
+        convergence <- sapply(RKFI, "[", 3)
+        names(convergence) <- time_span
+        convergence <- do.call("rbind", convergence)
+
+        # diversification <- sapply(RKFI, "[", 4)
+        # diversification <- do.call("rbind.data.frame", diversification)
+        #
+        # ubiquity <- sapply(RKFI, "[", 5)
+        # ubiquity <- do.call("rbind.data.frame", ubiquity)
+
+        RKFI <- sapply(RKFI, "[", 1)
         yrs <- unlist(mapply(rep, time_span, lapply(RKFI, nrow)))
-        RKFI <- do.call("rbind", RKFI)
+        RKFI <- do.call("rbind.data.frame", RKFI)
         RKFI <- cbind.data.frame(RKFI, yrs)
         RKFI <- RKFI[, c(1, 3, 2)]
         colnames(RKFI) <- c(geo_dim, time_dim, measure)
+
+        # attr(RKFI, 'diversification') <- diversification
+        # attr(RKFI, 'ubiquity') <- ubiquity
+        attr(RKFI, "iterations") <- iterations
+        attr(RKFI, "convergence") <- convergence
 
         return(RKFI)
     }

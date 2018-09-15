@@ -34,17 +34,22 @@ relatedness <- function(adj_mtx, output_statistic = "t",
         rnms <- rownames(adj_mtx)
         cnms <- colnames(adj_mtx)
 
-        adj_mtx <- as(adj_mtx, "ngCMatrix")
+        # adj_mtx <- as(adj_mtx, "ngCMatrix")
+        adj_mtx[which(adj_mtx > 0)] <- 1
+        if (any(adj_mtx@x != 1))
+            stop(paste("It is not possible to transform the matrix into ",
+                       "a binary (0/1) one"))
 
         Nr <- nrow(adj_mtx)
 
         J <- Matrix::crossprod(adj_mtx)
+        Matrix::diag(J) <- 0
 
         n <- Matrix::colSums(adj_mtx)
         mu <- Matrix::tcrossprod(n)
         mu <- mu / Nr
 
-        s2 <- Matrix::tcrossprod((1 - n / Nr), (Nr - n) / (Nr - 1))
+        s2 <- Matrix::tcrossprod((1 - (n / Nr)), ((Nr - n) / (Nr - 1)))
         s2 <- mu * s2
 
         t <- (J - mu) / sqrt(s2)
