@@ -68,9 +68,10 @@ coherence <- function(occurrence_mtx, relatedness_mtx) {
         rl_mtx_names <- colnames(relatedness_mtx)
         if (dim(occurrence_mtx)[[2]] != sum(dim(relatedness_mtx)) / 2) {
             names_tbr <- setdiff(rl_mtx_names, oc_mtx_names)
-            relatedness_mtx <- relatedness_mtx[
-                -which(rownames(relatedness_mtx) %in% names_tbr),
-                -which(colnames(relatedness_mtx) %in% names_tbr)]
+            if (sum(names_tbr) == 0)
+                relatedness_mtx <- relatedness_mtx[
+                    -which(rownames(relatedness_mtx) %in% names_tbr),
+                    -which(colnames(relatedness_mtx) %in% names_tbr)]
         }
         if (dim(occurrence_mtx)[[2]] != sum(dim(relatedness_mtx)) / 2)
             stop(paste('There is some problem, because the two matrices',
