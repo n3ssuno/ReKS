@@ -35,7 +35,7 @@ relatedness <- function(adj_mtx, output_statistic = "t",
         cnms <- colnames(adj_mtx)
 
         # adj_mtx <- as(adj_mtx, "ngCMatrix")
-        adj_mtx[which(adj_mtx > 0)] <- 1
+        adj_mtx[Matrix::which(adj_mtx > 0)] <- 1
         if (any(adj_mtx@x != 1))
             stop(paste("It is not possible to transform the matrix into ",
                        "a binary (0/1) one"))
