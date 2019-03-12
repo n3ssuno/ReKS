@@ -22,37 +22,19 @@
 #'
 #' @encoding UTF-8
 #'
-#' @param data It is expected to be a dataframe in "long" format.
-#' @param geo_dim It is the name of the column of the data.frame that
-#' represents its geographical dimension (e.g., the different regions of
-#' analysis).
-#' @param kng_dim It is the name of the column of the data.frame that
-#' represents its knowledge dimension (e.g., the different patent classes of
-#' analysis).
-#' @param kng_nbr It is the name of the column of the data.frame that
-#' represents the numerosity of each knowledge class (e.g., the number of
-#' patents a region has in a given year in a given patent class).
-#' @param binary_mode It is "RTA" by default. The possible values are: "simple"
-#' (if there is at least a patent in the geo. area in the particular tech. class
-#' it is 1, and 0 otherwise); "RTA" or "RCA" (Balassa method);
-#' "higher_quartiles" (similar to "simple", but it exludes the first quartile
-#' (it seems the best choice, see below); "higher_quartiles_kng" (similar to
-#' 'higher_quartiles', but the quartiles are computed for each knowledge class,
-#' assuming that some are more "ubiquitous" than others); "higher_deciles_kng"
-#' (similar to 'higher_quartiles_kng', but it excludes the lower 10% rather than
-#' the lower 25%). Warning: look carefully at the plot_biadj_matrix() output
-#' because I personally observed that with RTA applied to patent data you do not
-#' have the triangular structure observed in the trade data.
-#' @param scale It is TRUE by default. Otherwise, the Complexity Index is not
-#' standardised (CI - mean[CI] / sd[CI]).
-#' @param names_as_strings If TRUE the function assumes you have written the
-#' name of the columns above said as strings, otherwise they are assumed to
-#' be symbols. Default is FALSE.
+#' @param occurrence_mtx It is expected to be an object created by the
+#' ReKS::occurrence_matrix function.
+#' @param rta If TRUE (default) it uses the RTA/RCA of the original matrix.
+#' @param binary If TRUE (default) it binarises the RTA/RCA matrix
+#' (can be used only together with rta=TRUE).
+#' @param scale If TRUE (default) the output is standardised
+#' (z-scores = CI - mean[CI] / sd[CI]).
 #' @return A data.frame with the Complexity Index of each geographical area
 #' in each time step of analysis.
 #' @examples
-#' RKCI <- complexity(data = df, time_dim = year, geo_dim = NUTS2,
-#' kng_dim = IPC.3dig, kng_nbr = N.patents)
+#' OccM <- occurrence_matrix(data = DATA,
+#'            geo_dim = NUTS2, kng_dim = IPC4, kng_nbr = N_Patents)
+#' RKCI <- complexity(OccM)
 
 complexity_hh <- function(occurrence_mtx,
                           rta = TRUE, binary = TRUE, scale = TRUE) {
@@ -79,11 +61,13 @@ complexity_hh <- function(occurrence_mtx,
         rnms <- rownames(occurrence_mtx)
         # cnms <- colnames(occurrence_mtx)
 
-        if (isTRUE(rta))
-            occurrence_mtx <- rta(occurrence_mtx, binary = binary)
-        if (isTRUE(binary))
-            occurrence_mtx <- Matrix::Matrix(ifelse(occurrence_mtx > 0, 1, 0),
-                                             nrow = nrow(occurrence_mtx))
+        if (isTRUE(rta)) {
+            occurrence_mtx <- rta(occurrence_mtx)
+            if (isTRUE(binary))
+                occurrence_mtx <- Matrix::Matrix(
+                    ifelse(occurrence_mtx >= 1, 1, 0),
+                    nrow = nrow(occurrence_mtx))
+        }
 
         du <- ReKS:::.get_du(Matrix::as.matrix(occurrence_mtx))
         #TODO
