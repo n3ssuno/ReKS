@@ -1,5 +1,44 @@
 \name{NEWS}
 \title{ReKS News}
+\section{Changes in ReKS version 0.5.0 (2019-05-24)}{
+    %\subsection{BUG FIXES}{
+    %    \itemize{
+    %        \item
+    %    }
+    %}
+    \subsection{NEW FEATURES}{
+        \itemize{
+            \item Added two completely new functions:
+                \itemize{
+                    \item \code{coi()} that computes the Complexity Outlook
+                    Index for each region considered.
+                    \item \code{cog()} that computes the Complexity Outlook Gain
+                    for each technological domain in each region considered.
+                }
+                The documentation for these two functions will be added soon.
+        }
+    }
+    \subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
+        \itemize{
+            \item All the functions has been re-written. Follow the example in
+            the helps to understand the basic logic of the package.
+        }
+    }
+    \subsection{DEPRECATED AND DEFUNCT}{
+        \itemize{
+            \item \code{choropleth_map()}
+            \item \code{complexity_hh()}
+            \item \code{entropy()}
+            \item \code{entropy_decomposition()}
+            \item \code{entropy_decomposition_panel()}
+            \item \code{fitness_tccgp()}
+            \item \code{image_biadjacency_matrix()}
+            \item \code{jaccard_index()}
+            \item \code{occurrence_matrix()}
+
+        }
+    }
+}
 \section{Changes in ReKS version 0.3.0 (2018-07-12)}{
     \subsection{BUG FIXES}{
         \itemize{

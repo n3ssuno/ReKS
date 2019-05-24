@@ -3,54 +3,54 @@
 \encoding{UTF-8}
 \name{fitness}
 \alias{fitness}
-\title{Regional Knowledge Fitness Index}
+\title{Regional Fitness and/or Technological Complexity}
 \usage{
-fitness(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
-  binary_mode = "RTA")
+fitness(occt, rta = TRUE, binary = TRUE, which = "fitness")
 }
 \arguments{
-\item{data}{It is expected to be a dataframe in "long" format.}
+\item{occt}{Contingency table (i.e., occurrence table or incidence
+matrix) on which you want to compute the indices. It can be a 2D array,
+in which the first dimension represents the units of analysis (like firms,
+regions, or countries), and the second dimension represents the
+events or characteristics of interest (like the classes of the patens
+produced by the regions, or the sectors in which the workers belongs).
+Lastly, the values in each cell represents the occurrences of each unit-event
+pair. Moreover, you can use also a 3D array if you like, in which the third
+dimension represents the time. The object is expected to be of "table" class.}
 
-\item{geo_dim}{It is the name of the column of the data.frame that
-represents its geographical dimension (e.g., the different regions of
-analysis).}
+\item{rta}{If TRUE (default) it uses the Revealed Technological Advantages
+(RTA) of the original data}
 
-\item{kng_dim}{It is the name of the column of the data.frame that
-represents its knowledge dimension (e.g., the different patent classes of
-analysis).}
+\item{binary}{If TRUE (default) it binarises the RTA matrix
+(can be used only together with rta=TRUE).}
 
-\item{kng_nbr}{It is the name of the column of the data.frame that
-represents the numerosity of each knowledge class (e.g., the number of
-patents a region has in a given year in a given patent class).}
-
-\item{time_dim}{It is the name of the column of the data.frame that
-represents its temporal dimension (e.g., the different years of analysis).
-It is an optional parameter.}
-
-\item{binary_mode}{It is "RTA" by default. The possible values are: "simple"
-(if there is at least a patent in the geo. area in the particular tech. class
-it is 1, and 0 otherwise); "RTA" or "RCA" (Balassa method);
-"higher_quartiles" (similar to "simple", but it exludes the first quartile
-(it seems the best choice, see below); "higher_quartiles_kng" (similar to
-'higher_quartiles', but the quartiles are computed for each knowledge class,
-assuming that some are more "ubiquitous" than others); "higher_deciles_kng"
-(similar to 'higher_quartiles_kng', but it excludes the lower 10% rather than
-the lower 25%). Warning: look carefully at the plot_biadj_matrix() output
-because I personally observed that with RTA applied to patent data you do not
-have the triangular structure observed in the trade data.}
+\item{which}{It can be one of "fitness" (default), "complexity", "both".
+The first returns the fitness of each region; the second returns the
+complexity of each technological domain; and the third returns both the
+indices.}
 }
 \value{
-A data.frame with the Fitness Index of each geographical area
-in each time step of analysis.
+A data.frame with the Fitness of each region and/or the Complexity of
+each technological domain. If a 3D array is provided as input, it returns the
+full panel data.frame.
 }
 \description{
-The function computes the Fitness (i.e. \emph{competitiveness}) of each given
-geographical area considered, in each year provided (see the references
-below for further details).
+The function computes the fitness index of each region (i.e.
+its \emph{competitiveness}), in line with the methodology proposed by
+Pietronero and coauthors.
 }
 \examples{
-RKFI <- fitness(data = df, time_dim = year, geo_dim = NUTS2,
-kng_dim = IPC.3dig, kng_nbr = N.patents)
+geo <- paste0("R", 10:50)
+tech <- paste0("T", 10:90)
+time <- 1:5
+dat <- expand.grid(geo, tech, time)
+colnames(dat) <- c("geo", "tech", "time")
+set.seed(1)
+dat$nPat <- sample(1:200, nrow(dat), replace = TRUE)
+octab <- xtabs(nPat ~ geo + tech + time, dat)
+octab[sample(1:length(octab), length(octab)/2)] <- 0
+FX <- fitness(octab)
+attr(FX, "convergence")
 }
 \references{
 Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2012)

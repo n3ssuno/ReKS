@@ -3,64 +3,62 @@
 \encoding{UTF-8}
 \name{complexity}
 \alias{complexity}
-\title{Regional Knowledge Complexity Index}
+\title{Regional (Technological) Complexity Index}
 \usage{
-complexity(data, geo_dim, kng_dim, kng_nbr, time_dim = NULL,
-  binary_mode = "RTA", scale = TRUE)
+complexity(occt, rta = TRUE, binary = TRUE, scale = TRUE,
+  which = "rci")
 }
 \arguments{
-\item{data}{It is expected to be a dataframe in "long" format.}
+\item{occt}{Contingency table (i.e., occurrence table or incidence
+matrix) on which you want to compute the indices. It can be a 2D array,
+in which the first dimension represents the units of analysis (like firms,
+regions, or countries), and the second dimension represents the
+events or characteristics of interest (like the classes of the patens
+produced by the regions, or the sectors in which the workers belongs).
+Lastly, the values in each cell represents the occurrences of each unit-event
+pair. Moreover, you can use also a 3D array if you like, in which the third
+dimension represents the time. The object is expected to be of "table" class.}
 
-\item{geo_dim}{It is the name of the column of the data.frame that
-represents its geographical dimension (e.g., the different regions of
-analysis).}
+\item{rta}{If TRUE (default) it uses the Revealed Technological Advantages
+(RTA) of the original data}
 
-\item{kng_dim}{It is the name of the column of the data.frame that
-represents its knowledge dimension (e.g., the different patent classes of
-analysis).}
+\item{binary}{If TRUE (default) it binarises the RTA matrix
+(can be used only together with rta=TRUE).}
 
-\item{kng_nbr}{It is the name of the column of the data.frame that
-represents the numerosity of each knowledge class (e.g., the number of
-patents a region has in a given year in a given patent class).}
+\item{scale}{If TRUE (default) the output is standardised (mean = 0;
+sd = 1).}
 
-\item{time_dim}{It is the name of the column of the data.frame that
-represents its temporal dimension (e.g., the different years of analysis).
-It is an optional parameter.}
-
-\item{binary_mode}{It is "RTA" by default. The possible values are: "simple"
-(if there is at least a patent in the geo. area in the particular tech. class
-it is 1, and 0 otherwise); "RTA" or "RCA" (Balassa method);
-"higher_quartiles" (similar to "simple", but it exludes the first quartile
-(it seems the best choice, see below); "higher_quartiles_kng" (similar to
-'higher_quartiles', but the quartiles are computed for each knowledge class,
-assuming that some are more "ubiquitous" than others); "higher_deciles_kng"
-(similar to 'higher_quartiles_kng', but it excludes the lower 10% rather than
-the lower 25%). Warning: look carefully at the plot_biadj_matrix() output
-because I personally observed that with RTA applied to patent data you do not
-have the triangular structure observed in the trade data.}
-
-\item{scale}{It is TRUE by default. Otherwise, the Complexity Index is not
-standardised (CI - mean[CI] / sd[CI]).}
+\item{which}{It can be one of "rci" (default), "tci", "both". The first
+returns the complexity of each region; the second returns the complexity of
+each technological domain; and the third returns both the indices.}
 }
 \value{
-A data.frame with the Complexity Index of each geographical area
-in each time step of analysis.
+A data.frame with the Complexity Index of each region and/or of each
+technological domain. If a 3D array is provided as input, it returns the
+full panel data.frame.
 }
 \description{
-The function computes the ``Technological Complexity'' of each geographical
-area considered, in each given year, in line with the so called \emph{Method
-of Reflections} (see the references below).
+The function computes the complexity index of each region, in line with the
+methodology proposed by Hidalgo, Hausmann and coauthors.
 }
 \examples{
-RKCI <- complexity(data = df, time_dim = year, geo_dim = NUTS2,
-kng_dim = IPC.3dig, kng_nbr = N.patents)
+geo <- paste0("R", 10:50)
+tech <- paste0("T", 10:90)
+time <- 1:5
+dat <- expand.grid(geo, tech, time)
+colnames(dat) <- c("geo", "tech", "time")
+set.seed(1)
+dat$nPat <- sample(1:200, nrow(dat), replace = TRUE)
+octab <- xtabs(nPat ~ geo + tech + time, dat)
+octab[sample(1:length(octab), length(octab)/2)] <- 0
+CX <- complexity(octab)
 }
 \references{
-Hidalgo, Klinger, Barabási and Hausmann (2007) ``The Product Space
-Conditions the Development of Nations'', \emph{Science}, 317, 482--487;
-
 Hidalgo and Hausmann (2009) ``The Building Blocks of Economic
 Complexity'', \emph{PNAS}, 106, 10570--10575;
+
+Hausmann, Hidalgo, Bustos, Coscia, Chung, Jimenez, Simoes, and Yildirim
+(2014) \emph{The Atlas of Economic Complexity}, The MIT Press, 1st ed. 2011.
 
 Antonelli, Crespi, Mongeau Ospina and Scellato (2017) ``Knowledge
 Composition, Jacobs Externalities and Innovation Performance in European
