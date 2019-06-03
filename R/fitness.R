@@ -59,6 +59,8 @@
 #' octab[sample(1:length(octab), length(octab)/2)] <- 0
 #' FX <- fitness(octab)
 #' attr(FX, "convergence")
+#'
+#' @export
 
 # @importFrom methods as is
 

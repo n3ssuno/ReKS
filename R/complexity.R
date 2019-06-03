@@ -60,6 +60,8 @@
 #' octab <- xtabs(nPat ~ geo + tech + time, dat)
 #' octab[sample(1:length(octab), length(octab)/2)] <- 0
 #' CX <- complexity(octab)
+#'
+#' @export
 
 complexity <- function(occt,
                        rta = TRUE,

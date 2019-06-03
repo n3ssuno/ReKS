@@ -51,6 +51,7 @@ octab <- xtabs(nPat ~ geo + tech + time, dat)
 octab[sample(1:length(octab), length(octab)/2)] <- 0
 FX <- fitness(octab)
 attr(FX, "convergence")
+
 }
 \references{
 Tacchella, Cristelli, Caldarelli, Gabrielli and Pietronero (2012)

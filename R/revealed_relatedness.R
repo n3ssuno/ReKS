@@ -55,6 +55,8 @@
 #' @param sparse It can be TRUE or FALSE
 #'
 #' @return A matrix of similarity between technological domains
+#'
+#' @export
 
 # @importFrom methods as
 

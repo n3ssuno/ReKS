@@ -58,6 +58,7 @@ grps <- substr(attr(octab, "dimnames")$tech, 2, 2)
 ETP <- shannonEntropy(octab,
                       log_base = exp(1),
                       Theil_decomp = grps)
+
 }
 \references{
 Theil (1972) \emph{Statistical Decomposition Analysis}, North-Holland.

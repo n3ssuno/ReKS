@@ -68,6 +68,8 @@
 #' octab[sample(1:length(octab), length(octab)/2)] <- 0
 #' rel_m <- relatedness(octab, output_statistic = "p")
 #' RCH <- coherence(octab, rel_m)
+#'
+#' @export
 
 coherence <- function(occt, relatedness_mtx) {
 

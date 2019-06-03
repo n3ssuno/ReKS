@@ -72,6 +72,8 @@
 #' ETP <- shannonEntropy(octab,
 #'                       log_base = exp(1),
 #'                       Theil_decomp = grps)
+#'
+#' @export
 
 shannonEntropy <- function(occt,
                            log_base = 2,

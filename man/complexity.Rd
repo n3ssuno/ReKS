@@ -52,6 +52,7 @@ dat$nPat <- sample(1:200, nrow(dat), replace = TRUE)
 octab <- xtabs(nPat ~ geo + tech + time, dat)
 octab[sample(1:length(octab), length(octab)/2)] <- 0
 CX <- complexity(octab)
+
 }
 \references{
 Hidalgo and Hausmann (2009) ``The Building Blocks of Economic

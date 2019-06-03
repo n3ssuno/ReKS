@@ -47,7 +47,7 @@
 #' decomposition in between- and within-group components.
 #'
 #' @examples
-#' #' geo <- paste0("R", 10:50)
+#' geo <- paste0("R", 10:50)
 #' tech <- paste0("T", 10:90)
 #' time <- 1:5
 #' dat <- expand.grid(geo, tech, time)
@@ -60,6 +60,8 @@
 #' EVS <- shannonEvenness(octab,
 #'                       log_base = exp(1),
 #'                       Theil_decomp = grps)
+#'
+#' @export
 
 shannonEvenness <- function(occt,
                            log_base = 2,

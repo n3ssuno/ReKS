@@ -45,7 +45,7 @@ for the evenness decomposed in the two constituents of within- and
 between-groups evenness.
 }
 \examples{
-#' geo <- paste0("R", 10:50)
+geo <- paste0("R", 10:50)
 tech <- paste0("T", 10:90)
 time <- 1:5
 dat <- expand.grid(geo, tech, time)
@@ -58,6 +58,7 @@ grps <- substr(attr(octab, "dimnames")$tech, 2, 2)
 EVS <- shannonEvenness(octab,
                       log_base = exp(1),
                       Theil_decomp = grps)
+
 }
 \references{
 Pielou (1969) \emph{An Introduction to Mathematical Ecology}, Wiley.

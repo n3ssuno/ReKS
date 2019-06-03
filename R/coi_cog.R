@@ -1,6 +1,8 @@
 # possible to use also fitness
 # merge in a unique function coi_cog()
 
+#' @export
+
 coi <- function(occt, long = TRUE) {
     # coi: Complexity Outlook Index
 
@@ -25,6 +27,8 @@ coi <- function(occt, long = TRUE) {
 
     return(COI)
 }
+
+#' @export
 
 cog <- function(occt, long = TRUE) {
     # cog: Complexity Outlook Gain

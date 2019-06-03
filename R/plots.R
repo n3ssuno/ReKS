@@ -1,4 +1,6 @@
 
+#' @export
+
 plot_biadjacency_matrix <- function (occt, order = "DU", ...) {
     nms <- names(dimnames(occt))
     occt <- Matrix::Matrix(occt, sparse = TRUE)

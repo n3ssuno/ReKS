@@ -1,4 +1,6 @@
 
+#' @export
+
 local_density <- function(occt) {
     #-- Preliminary steps and checks
     info <- data_info(occt)
