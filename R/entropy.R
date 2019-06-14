@@ -94,14 +94,14 @@ shannonEntropy <- function(occt,
     #-- Main Function
     if (info$n_dims == 3) {
         etp <- apply(occt, 3, shannonEntropy, log_base, Theil_decomp)
-        if(!is.null(Theil_decomp)) {
+        if (!is.null(Theil_decomp)) {
             betp <- lapply(etp, `[`, c(info$dim_nms[1], "entropy_between"))
             wetp <- lapply(etp, `[`, c(info$dim_nms[1], "entropy_within"))
             etp <- lapply(etp, `[`, c(info$dim_nms[1], "entropy"))
         }
     } else {
         etp <- apply(occt, 1, entropy, log_base)
-        if(!is.null(Theil_decomp)) {
+        if (!is.null(Theil_decomp)) {
             g <- apply(occt, 1, by, Theil_decomp, sum)
             g <- aperm(g, c(2, 1))
             betp <- apply(g, 1, function(x) entropy(x, log_base))
@@ -112,7 +112,7 @@ shannonEntropy <- function(occt,
 
     #-- Final steps
     etp <- wide_to_long(etp, info$n_dim, info$dim_nms[info$nd[[1]]], "entropy")
-    if(!is.null(Theil_decomp)) {
+    if (!is.null(Theil_decomp)) {
         wetp <- wide_to_long(wetp, info$n_dim,
                              info$dim_nms[info$nd[[1]]], "entropy_within")
         betp <- wide_to_long(betp, info$n_dim,

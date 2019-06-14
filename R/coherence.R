@@ -92,9 +92,9 @@ coherence <- function(occt, relatedness_mtx) {
                     -which(colnames(relatedness_mtx) %in% names_tbr)]
         }
         if (dim(occt)[[2]] != sum(dim(relatedness_mtx)) / 2)
-            stop(paste('There is some problem, because the two matrices',
-                       'considered have a different number of',
-                       'columns.'), call. = FALSE)
+            stop(paste("There is some problem, because the two matrices",
+                       "considered have a different number of",
+                       "columns."), call. = FALSE)
         rl_mtx_names <- colnames(relatedness_mtx)
         if (any(oc_mtx_names != rl_mtx_names)) {
             oc_mtx_names <- oc_mtx_names[, order(colnames(oc_mtx_names))]
@@ -102,9 +102,9 @@ coherence <- function(occt, relatedness_mtx) {
                                                order(colnames(relatedness_mtx))]
         }
         if (any(oc_mtx_names != rl_mtx_names))
-            stop(paste('There is some problem, because the there is no perfect',
-                       'correspondence between the column names of the two',
-                       'matrices considered.'), call. = FALSE)
+            stop(paste("There is some problem, because the there is no perfect",
+                       "correspondence between the column names of the two",
+                       "matrices considered."), call. = FALSE)
         # Waighted Average Relatedness
         ones <- !Matrix::diag(TRUE,
                               nrow = nrow(relatedness_mtx),
@@ -125,4 +125,3 @@ coherence <- function(occt, relatedness_mtx) {
                       info$dim_nms[info$nd[[1]]], "Coherence")
     return(C)
 }
-

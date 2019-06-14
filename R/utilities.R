@@ -11,10 +11,12 @@ rta <- function (data, binary = FALSE) {
     RA <- Matrix::t(num / den)
     RA[is.na(RA)] <- 0
     if (isTRUE(binary)) {
-        #RA[RA > 1] <- 1
-        #RA[RA < 1] <- 0
-        RA <- ifelse(RA >= 1, 1, 0)
-        RA <- Matrix::Matrix(RA, sparse = spm)
+        if (isTRUE(spm)) {
+            RA <- as(as(RA >= 1, "lgCMatrix"), "dgCMatrix")
+        } else {
+            RA <- ifelse(RA >= 1, 1, 0)
+            RA <- Matrix::Matrix(RA)
+        }
     }
     return(RA)
 }
@@ -45,7 +47,7 @@ wide_to_long <- function(df, n_dims, col_names, measure_name) {
     # Assign the name of the measure
     colnames(df) <- c(col_names, measure_name)
     # Transform the temporal dimension in a numeric variable
-    if(is.factor(df[, 2])) {
+    if (is.factor(df[, 2])) {
         df[, 2] <- as.numeric(levels(df[, 2]))[df[, 2]]
     } else {
         df[, 2] <- as.numeric(df[, 2])
@@ -65,8 +67,8 @@ wide_to_long <- function(df, n_dims, col_names, measure_name) {
 
 data_info <- function(occt) {
     if (!requireNamespace("Matrix", quietly = TRUE)) {
-        stop(paste0('Package \"Matrix\" needed for this function to work. ',
-                    'Please install it.'), call. = FALSE)
+        stop(paste0("Package \"Matrix\" needed for this function to work. ",
+                    "Please install it."), call. = FALSE)
     }
     # if (!"table" %in% class(occt)) {
     #     stop("Please, provide an object of class \"table\" as input.")

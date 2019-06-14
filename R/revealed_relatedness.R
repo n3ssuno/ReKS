@@ -50,7 +50,7 @@
 #' @param fixedmar It is useful to choose which constraint you want to impose
 #' in the null model.
 #' @param seed It is useful to choose the seed.
-#' @param nSim You can choose how many simulations you want to run to compute
+#' @param n_sim You can choose how many simulations you want to run to compute
 #' the null model.
 #' @param sparse It can be TRUE or FALSE
 #'
@@ -70,7 +70,7 @@ relatedness <- function(occt,
                         is_binary = NULL,
                         fixedmar = "both",
                         seed = Sys.time(),
-                        nSim = 1000,
+                        n_sim = 1000,
                         sparse = FALSE) {
 
     #-- Preliminary steps and checks
@@ -82,8 +82,8 @@ relatedness <- function(occt,
 
     occt <- Matrix::Matrix(occt, sparse = sparse)
 
-    #-- Internal functions
-    #---- t-stat
+    # Internal functions ----
+    # t-stat --------
     relatedness_t <- function(...) {
         if (all(occt > 0)) {
             stop(paste("The adjacency matrix is complete.",
@@ -91,7 +91,7 @@ relatedness <- function(occt,
                        "between its nodes."))
         }
         occt[Matrix::which(occt > 0)] <- 1
-        if (!all(occt@x %in% c(0,1)))
+        if (!all(occt@x %in% c(0, 1)))
             stop(paste("It is not possible to transform the matrix into ",
                        "a binary (0/1) one"))
         Nr <- nrow(occt)
@@ -100,31 +100,31 @@ relatedness <- function(occt,
         n <- Matrix::colSums(occt)
         mu <- Matrix::tcrossprod(n)
         mu <- mu / Nr
-        s2 <- Matrix::tcrossprod((1 - (n / Nr)), ((Nr - n) / (Nr - 1)))
+        s2 <- Matrix::tcrossprod(1 - (n / Nr), (Nr - n) / (Nr - 1))
         s2 <- mu * s2
         t <- (J - mu) / sqrt(s2)
         Matrix::diag(t) <- 0
         return(t)
     }
-    #---- p-value
+    # p-value --------
     relatedness_p <- function(...) {
         if (!requireNamespace("vegan", quietly = TRUE)) {
             stop(paste0("Package \"vegan\" needed for this function to work. ",
                         "Please install it."), call. = FALSE)
         }
-        isBinary <- ifelse((is.null(is_binary) &&
+        is_binary <- ifelse((is.null(is_binary) &&
                                 all(occt@x %in% c(0, 1, FALSE, TRUE))) ||
                                isTRUE(is_binary), TRUE, FALSE)
-        #if (isBinary)
+        #if (is_binary)
         #    occt <- as(occt, "ngCMatrix")
 
         set.seed(seed)
         occt_null_models <- vegan::permatswap(occt,
                                               fixedmar = fixedmar,
-                                              mtype = ifelse(isBinary,
+                                              mtype = ifelse(is_binary,
                                                              "prab",
                                                              "count"),
-                                              times = nSim)
+                                              times = n_sim)
 
         J_hat <- Matrix::crossprod(occt)
         J <- lapply(occt_null_models$perm, function(m) {
@@ -134,25 +134,25 @@ relatedness <- function(occt,
             })
         p <- lapply(J, function(m) J_hat >= m)
         p <- Reduce("+", p)
-        p <- p / nSim
+        p <- p / n_sim
 
         Matrix::diag(p) <- 0
 
-        pPlus <- pmax(as.vector(2 * p - 1), rep(0, nrow(p) * ncol(p)))
-        pPlus <- Matrix::Matrix(pPlus, nrow = nrow(p), ncol = ncol(p))
-        pMinus <- pmin(as.vector(2 * p - 1), rep(0, nrow(p) * ncol(p))) * (-1)
-        pMinus <- Matrix::Matrix(pMinus, nrow = nrow(p), ncol = ncol(p))
+        p_plus <- pmax(as.vector(2 * p - 1), rep(0, nrow(p) * ncol(p)))
+        p_plus <- Matrix::Matrix(p_plus, nrow = nrow(p), ncol = ncol(p))
+        p_minus <- pmin(as.vector(2 * p - 1), rep(0, nrow(p) * ncol(p))) * (-1)
+        p_minus <- Matrix::Matrix(p_minus, nrow = nrow(p), ncol = ncol(p))
 
         names(attr(p, "Dimnames")) <- info$dim_nms[info$nd[[2]]]
-        names(attr(pPlus, "Dimnames")) <- info$dim_nms[info$nd[[2]]]
-        names(attr(pMinus, "Dimnames")) <- info$dim_nms[info$nd[[2]]]
+        names(attr(p_plus, "Dimnames")) <- info$dim_nms[info$nd[[2]]]
+        names(attr(p_minus, "Dimnames")) <- info$dim_nms[info$nd[[2]]]
 
         #rownames(p) <- colnames(p) <- cnms
-        #rownames(pPlus) <- colnames(pPlus) <- cnms
-        #rownames(pMinus) <- colnames(pMinus) <- cnms
+        #rownames(p_plus) <- colnames(p_plus) <- cnms
+        #rownames(p_minus) <- colnames(p_minus) <- cnms
 
-        attr(p, "pPlus") <- pPlus
-        attr(p, "pMinus") <- pMinus
+        attr(p, "p_plus") <- p_plus
+        attr(p, "p_minus") <- p_minus
 
         return(p)
     }

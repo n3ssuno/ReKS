@@ -78,10 +78,10 @@ complexity <- function(occt,
                     rta, binary, scale, which)
         if (which == "both") {
             RCI <- lapply(index, function(x) {
-                unique(x[,c(1, 3)])
+                unique(x[, c(1, 3)])
             })
             TCI <- lapply(index, function(x) {
-                unique(x[,c(2, 4)])
+                unique(x[, c(2, 4)])
             })
             index <- list(RCI = RCI,
                           TCI = TCI)
@@ -93,9 +93,10 @@ complexity <- function(occt,
         }
         diversity <- Matrix::rowSums(occt)
         ubiquity <- Matrix::colSums(occt)
-        mcp1 = occt / diversity
-        mcp2 = Matrix::t(Matrix::t(occt) / ubiquity)
-        Mpp = Matrix::crossprod(mcp2, mcp1)
+        mcp1 <- occt / diversity
+        mcp2 <- Matrix::t(Matrix::t(occt) / ubiquity)
+        # Mcc <- Matrix::tcrossprod(mcp1, mcp2)
+        Mpp <- Matrix::crossprod(mcp2, mcp1)
         if (!all(round(Matrix::rowSums(Mpp)) == 1)) {
             stop(paste("The matrix is not row-stochastic.\n",
                        "It is not possible to compute the measure."))

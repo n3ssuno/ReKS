@@ -90,14 +90,14 @@ shannonEvenness <- function(occt,
     #-- Main Function
     if (info$n_dims == 3) {
         evs <- apply(occt, 3, shannonEvenness, log_base, Theil_decomp)
-        if(!is.null(Theil_decomp)) {
+        if (!is.null(Theil_decomp)) {
             bevs <- lapply(evs, `[`, c(info$dim_nms[1], "evenness_between"))
             wevs <- lapply(evs, `[`, c(info$dim_nms[1], "evenness_within"))
             evs <- lapply(evs, `[`, c(info$dim_nms[1], "evenness"))
         }
     } else {
         evs <- apply(occt, 1, evenness, log_base)
-        if(!is.null(Theil_decomp)) {
+        if (!is.null(Theil_decomp)) {
             etp <- apply(occt, 1, function(x) entropy(x, log_base))
             g <- apply(occt, 1, by, Theil_decomp, sum)
             g <- aperm(g, c(2, 1))
@@ -131,7 +131,7 @@ shannonEvenness <- function(occt,
 
     #-- Final steps
     evs <- wide_to_long(evs, info$n_dim, info$dim_nms[info$nd[[1]]], "evenness")
-    if(!is.null(Theil_decomp)) {
+    if (!is.null(Theil_decomp)) {
         wevs <- wide_to_long(wevs, info$n_dim,
                              info$dim_nms[info$nd[[1]]], "evenness_within")
         bevs <- wide_to_long(bevs, info$n_dim,

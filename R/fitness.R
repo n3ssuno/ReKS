@@ -79,10 +79,10 @@ fitness <- function(occt,
         c <- sapply(index, attr, "convergence")
         if (which == "both") {
             Fx <- lapply(index, function(x) {
-                unique(x[,c(1, 3)])
+                unique(x[, c(1, 3)])
             })
             Cx <- lapply(index, function(x) {
-                unique(x[,c(2, 4)])
+                unique(x[, c(2, 4)])
             })
             index <- list(Fx = Fx,
                           Cx = Cx)
@@ -95,7 +95,7 @@ fitness <- function(occt,
         }
         Fx <- rep(1, nrow(occt))
         Cx <- rep(1, ncol(occt))
-        if(spm) {
+        if (spm) {
             Fx <- Matrix::c.sparseVector(Fx)
             Cx <- Matrix::c.sparseVector(Cx)
         }
@@ -114,12 +114,12 @@ fitness <- function(occt,
             #  original sources to use 20 recursions. Another thing to check
             #  and decide is what happens in the function if the algorithm
             #  does not converge
-            if (all((Fx - Fx1) < 0.0000000001) &
-                all((Cx - Cx1) < 0.0000000001)) {
+            if (all(Fx - Fx1 < 0.0000000001) &
+                all(Cx - Cx1 < 0.0000000001)) {
                 Fx <- Fx1
                 Cx <- Cx1
                 c <- TRUE
-                break()
+                break
             }
             if (i >= 200) {
                 Fx <- rep(as.numeric(NA), nrow(occt))
@@ -127,7 +127,7 @@ fitness <- function(occt,
                 names(Fx) <- names(Fx1)
                 names(Cx) <- names(Cx1)
                 c <- FALSE
-                break()
+                break
             }
             Fx <- Fx1
             Cx <- Cx1
@@ -158,11 +158,11 @@ fitness <- function(occt,
                                               info$n_dims,
                                               info$dim_nms[info$nd[[2]]],
                                               "complexity"),
-                                 all = TRUE)[, c(info$n_dims-1,
-                                                 info$n_dims+1,
-                                                 info$n_dims-2,
+                                 all = TRUE)[, c(info$n_dims - 1,
+                                                 info$n_dims + 1,
+                                                 info$n_dims - 2,
                                                  info$n_dims,
-                                                 info$n_dims+2)]
+                                                 info$n_dims + 2)]
     )
     attr(index, "iterations") <- i
     attr(index, "convergence") <- c

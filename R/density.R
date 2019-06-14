@@ -18,4 +18,3 @@ local_density <- function(occt) {
 
     return(w)
 }
-
