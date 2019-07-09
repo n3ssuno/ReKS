@@ -1,11 +1,9 @@
-# ReKS
+# ReKS <img src='man/figures/logo.png' align="right" height="120" />
 ReKS ("Regional Knowledge Space") is an R Package that computes some measure 
 about the knowledge space of a regional economy.
 
-![Origami Dinosaur](noun_77258_cc_resized.png)
-
 *Warnings*: At the moment it is under strong development and other functions 
-will be added soon. Also the documentation and the relative bibligraphical
+will be added soon. Also the documentation and the relative bibliographical
 references are only partial and will be fixed as soon as possible.
 
 ## Install
@@ -16,6 +14,9 @@ references are only partial and will be fixed as soon as possible.
 
 ## Author
 Carlo Bottai - carlo DOT bottai AT unito DOT it
+
+## Development
+This is free (as in Freedom) software that follows a bazaar development model. So, any help will be appreciated. Please, write me an email or use the GitHub tools to contribute.
 
 ## License
 This project is licensed under the GNU GPL3 License - see the

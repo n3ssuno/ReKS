@@ -12,14 +12,14 @@ coherence(occt, relatedness_mtx)
 matrix) on which you want to compute the indices. It can be a 2D array,
 in which the first dimension represents the units of analysis (like firms,
 regions, or countries), and the second dimension represents the
-events or characteristics of interest (like the classes of the patens
+events or characteristics of interest (like the classes of the patents
 produced by the regions, or the sectors in which the workers belongs).
 Lastly, the values in each cell represents the occurrences of each unit-event
 pair. Moreover, you can use also a 3D array if you like, in which the third
 dimension represents the time. The object is expected to be of "table" class.}
 
 \item{relatedness_mtx}{Matrix of similarity between the technological
-classes. The ReKS package provides some function to buid it: see
+classes. The ReKS package provides some function to build it: see
 \code{\link{relatedness}} and \code{\link{proximity}}.}
 }
 \value{
@@ -35,7 +35,7 @@ reference is composed by all the information provided in the database, and
 only this.
 You can use it both on a panel data set (if you identify also a column with
 a temporal indication of the observations) or on cross-section data (by
-leaveing the parameter just said as NULL).
+leaving the parameter just said as NULL).
 }
 \examples{
 geo <- paste0("R", 10:50)

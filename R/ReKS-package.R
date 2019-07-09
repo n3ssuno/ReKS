@@ -1,4 +1,4 @@
-#' ReKS: A package for computating some measure about the knowledge space
+#' ReKS: A package for computing some measure about the knowledge space
 #' of a economic region.
 #'
 #' @section ReKS main functions:

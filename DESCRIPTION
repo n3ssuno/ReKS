@@ -9,7 +9,7 @@ Maintainer: Carlo Bottai <carlo.bottai@unito.it>
 Description: ReKS (read it ``rex'') stands for Regional Knowledge Space. It is an R Package that computes some measure about the knowledge space of a regional economy.
 URL: https://github.com/n3ssuno/ReKS
 BugReports: https://github.com/n3ssuno/ReKS/issues
-License: GPL-3 + file LICENSE
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
@@ -17,3 +17,4 @@ Imports:
     Matrix,
     vegan,
     methods
+Language: en-GB

@@ -44,14 +44,14 @@
 #' matrix) on which you want to compute the indices. It can be a 2D array,
 #' in which the first dimension represents the units of analysis (like firms,
 #' regions, or countries), and the second dimension represents the
-#' events or characteristics of interest (like the classes of the patens
+#' events or characteristics of interest (like the classes of the patents
 #' produced by the regions, or the sectors in which the workers belongs).
 #' Lastly, the values in each cell represents the occurrences of each unit-event
 #' pair. Moreover, you can use also a 3D array if you like, in which the third
 #' dimension represents the time. The object is expected to be of "table" class.
 #' @param log_base Base of the logarithm used to compute the entropy (i.e.,
 #' its unit of measure). The default value is 2. You can use any number you
-#' like (to use the natural logaritihm, write exp(1)).
+#' like (to use the natural logarithm, write exp(1)).
 #' @param Theil_decomp A list of groups . It should be of the same length
 #' of the second dimension of the occt provided.
 #'
