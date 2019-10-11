@@ -1,4 +1,5 @@
 # @importFrom methods is
+#' @importFrom methods as
 
 rta <- function (data, binary = FALSE) {
     if (!requireNamespace("Matrix", quietly = TRUE)) {

@@ -218,3 +218,26 @@ proximity <- function(occt) {
 
     return(Phi)
 }
+
+#' @name
+#' association_strength
+#'
+#' @title
+#' Association Strength
+
+# - Works only for 2D objects
+# - improve documentation
+
+association_strength <- function(occt, SCALE = NULL) {
+
+    occt <- remove_zeros(occt)
+
+    Phi <- Matrix::crossprod(occt)
+    Phi <- rta(Phi)
+
+    if (!is.null(SCALE)) {
+        Phi <- SCALE(Phi)
+    }
+
+    return(Phi)
+}
