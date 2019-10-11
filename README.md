@@ -13,14 +13,14 @@ references are only partial and will be fixed as soon as possible.
 ```
 
 ## Author
-Carlo Bottai - carlo DOT bottai AT unito DOT it
+Carlo Bottai - c DOT bottai AT tue DOT nl
 
 ## Development
 This is free (as in Freedom) software that follows a bazaar development model. So, any help will be appreciated. Please, write me an email or use the GitHub tools to contribute.
 
 ## License
 This project is licensed under the GNU GPL3 License - see the
-[LICENSE](https://github.com/n3ssuno/RKS/blob/master/LICENSE) file for details.
+[LICENSE](https://github.com/n3ssuno/RKS/blob/master/LICENSE.md) file for details.
 
 Please, if you use the package in your research and publications cite it as  
 Carlo Bottai (2018) "ReKS" (Version v0.2.9-beta), *Zenodo*  
