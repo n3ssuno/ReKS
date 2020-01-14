@@ -29,9 +29,9 @@ Carlo Bottai (2018) "ReKS" (Version v0.2.9-beta), *Zenodo*
 [![DOI](https://zenodo.org/badge/130252224.svg)](https://zenodo.org/badge/latestdoi/130252224)
 
 ## Credits
-The package has been partly developed as part of the RENIR project, 
-an international research network on industrial resilience 
-led by profs. Aldo Geuna and Dan Breznitz 
+The package has been partly developed as within the 
+[RENIR](https://renir.carloalberto.org) project, an international research network 
+on industrial resilience led by profs. Aldo Geuna and Dan Breznitz 
 and financed by the University of Turin, the Compagnia di San Paolo and The Lupina Foundation. 
 I would like to thank the member of the network and the founders for their help and support.
 
